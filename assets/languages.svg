@@ -12,7 +12,7 @@
 .font-footer { font-family: 'Courier New', monospace; font-size: 10px; }
 .csharp { fill: #76946a; }
 .python { fill: #98bb6c; }
-.lua { fill: #dcd7ba; }
+.lua { fill: #7fb4ca; }
 .shell { fill: #6a9589; }
 .javascript { fill: #dca561; }
 .vimscript { fill: #dcd7ba; }
@@ -26,8 +26,8 @@
 <text x="25" y="4" class="fg-primary font-lang">C#</text>
 <text x="460" y="4" class="fg-secondary font-percent">53.1%</text>
 <rect x="25" y="12" width="400" height="8" fill="#54546d" rx="4"/>
-<rect x="25" y="12" width="212.5978285650257" height="8" class="csharp" rx="4">
-  <animate attributeName="width" from="0" to="212.5978285650257" dur="1.5s" begin="0.2s" fill="freeze"/>
+<rect x="25" y="12" width="212.53098420817395" height="8" class="csharp" rx="4">
+  <animate attributeName="width" from="0" to="212.53098420817395" dur="1.5s" begin="0.2s" fill="freeze"/>
 </rect>
 </g>
 <g transform="translate(60, 120)">
@@ -35,8 +35,8 @@
 <text x="25" y="4" class="fg-primary font-lang">Python</text>
 <text x="460" y="4" class="fg-secondary font-percent">27.8%</text>
 <rect x="25" y="12" width="400" height="8" fill="#54546d" rx="4"/>
-<rect x="25" y="12" width="111.05836515009393" height="8" class="python" rx="4">
-  <animate attributeName="width" from="0" to="111.05836515009393" dur="1.5s" begin="0.30000000000000004s" fill="freeze"/>
+<rect x="25" y="12" width="111.14921329223917" height="8" class="python" rx="4">
+  <animate attributeName="width" from="0" to="111.14921329223917" dur="1.5s" begin="0.30000000000000004s" fill="freeze"/>
 </rect>
 </g>
 <g transform="translate(60, 160)">
@@ -44,8 +44,8 @@
 <text x="25" y="4" class="fg-primary font-lang">Lua</text>
 <text x="460" y="4" class="fg-secondary font-percent">13.4%</text>
 <rect x="25" y="12" width="400" height="8" fill="#54546d" rx="4"/>
-<rect x="25" y="12" width="53.58484244532444" height="8" class="lua" rx="4">
-  <animate attributeName="width" from="0" to="53.58484244532444" dur="1.5s" begin="0.4s" fill="freeze"/>
+<rect x="25" y="12" width="53.56799446360028" height="8" class="lua" rx="4">
+  <animate attributeName="width" from="0" to="53.56799446360028" dur="1.5s" begin="0.4s" fill="freeze"/>
 </rect>
 </g>
 <g transform="translate(60, 200)">
@@ -53,8 +53,8 @@
 <text x="25" y="4" class="fg-primary font-lang">Shell</text>
 <text x="460" y="4" class="fg-secondary font-percent">2.4%</text>
 <rect x="25" y="12" width="400" height="8" fill="#54546d" rx="4"/>
-<rect x="25" y="12" width="9.522008064252198" height="8" class="shell" rx="4">
-  <animate attributeName="width" from="0" to="9.522008064252198" dur="1.5s" begin="0.5s" fill="freeze"/>
+<rect x="25" y="12" width="9.519014183697122" height="8" class="shell" rx="4">
+  <animate attributeName="width" from="0" to="9.519014183697122" dur="1.5s" begin="0.5s" fill="freeze"/>
 </rect>
 </g>
 <g transform="translate(60, 240)">
@@ -62,8 +62,8 @@
 <text x="25" y="4" class="fg-primary font-lang">JavaScript</text>
 <text x="460" y="4" class="fg-secondary font-percent">1.5%</text>
 <rect x="25" y="12" width="400" height="8" fill="#54546d" rx="4"/>
-<rect x="25" y="12" width="5.9233258134283275" height="8" class="javascript" rx="4">
-  <animate attributeName="width" from="0" to="5.9233258134283275" dur="1.5s" begin="0.6000000000000001s" fill="freeze"/>
+<rect x="25" y="12" width="5.921463419503166" height="8" class="javascript" rx="4">
+  <animate attributeName="width" from="0" to="5.921463419503166" dur="1.5s" begin="0.6000000000000001s" fill="freeze"/>
 </rect>
 </g>
 <g transform="translate(60, 280)">
@@ -71,8 +71,8 @@
 <text x="25" y="4" class="fg-primary font-lang">Vim Script</text>
 <text x="460" y="4" class="fg-secondary font-percent">0.6%</text>
 <rect x="25" y="12" width="400" height="8" fill="#54546d" rx="4"/>
-<rect x="25" y="12" width="2.283817523135218" height="8" class="vimscript" rx="4">
-  <animate attributeName="width" from="0" to="2.283817523135218" dur="1.5s" begin="0.7s" fill="freeze"/>
+<rect x="25" y="12" width="2.2830994522380164" height="8" class="vimscript" rx="4">
+  <animate attributeName="width" from="0" to="2.2830994522380164" dur="1.5s" begin="0.7s" fill="freeze"/>
 </rect>
 </g>
 <line x1="60" y1="340" x2="540" y2="340" stroke="#54546d" stroke-width="1"/>
