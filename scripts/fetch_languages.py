@@ -1,10 +1,24 @@
 import os
 import requests
+from dotenv import load_dotenv
+
+# Load .env file if present
+load_dotenv()
 
 USERNAME = os.getenv("USERNAME")
 TOKEN = os.getenv("GH_TOKEN")
 TOP_N = 6
 SVG_PATH = "assets/languages.svg"
+
+# Read excluded langs from .env
+EXCLUDED_LANGS_RAW = os.getenv("EXCLUDED_LANGS", "")
+EXCLUDED_LANGS = set(
+    lang.strip().lower() for lang in EXCLUDED_LANGS_RAW.split(",") if lang.strip()
+)
+
+if EXCLUDED_LANGS:
+    print(f"Excluding languages (as written in .env): {EXCLUDED_LANGS_RAW}")
+    print(f"Normalized for matching: {sorted(EXCLUDED_LANGS)}")
 
 colors = {
     "bg_primary": "#1f1f28",
@@ -95,6 +109,8 @@ def aggregate_languages():
         try:
             langs = get_language_data(repo)
             for lang, lines in langs.items():
+                if lang.lower() in EXCLUDED_LANGS:
+                    continue
                 totals[lang] = totals.get(lang, 0) + lines
         except requests.exceptions.RequestException as e:
             print(f"Error fetching languages for {repo['name']}: {e}")

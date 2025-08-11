@@ -1,7 +1,3 @@
-.env
 kanagawa-actions-key
 kanagawa-actions-key.pub
-__pycache__/
-*.pyc
-.DS_Store
-Thumbs.db
+.env

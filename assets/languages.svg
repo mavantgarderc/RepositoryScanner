@@ -11,11 +11,11 @@
 .font-percent { font-family: 'Courier New', monospace; font-size: 12px; }
 .font-footer { font-family: 'Courier New', monospace; font-size: 10px; }
 .csharp { fill: #76946a; }
-.lua { fill: #dcd7ba; }
 .python { fill: #98bb6c; }
-.html { fill: #e82424; }
+.lua { fill: #dcd7ba; }
 .shell { fill: #6a9589; }
-.css { fill: #957fb8; }
+.javascript { fill: #dca561; }
+.vimscript { fill: #dcd7ba; }
 </style>
 </defs>
 <rect width="600" height="400" fill="#1f1f28" rx="12"/>
@@ -24,55 +24,55 @@
 <g transform="translate(60, 80)">
 <circle cx="8" cy="0" r="6" class="csharp"/>
 <text x="25" y="4" class="fg-primary font-lang">C#</text>
-<text x="460" y="4" class="fg-secondary font-percent">64.0%</text>
+<text x="460" y="4" class="fg-secondary font-percent">53.1%</text>
 <rect x="25" y="12" width="400" height="8" fill="#54546d" rx="4"/>
-<rect x="25" y="12" width="255.86664085292173" height="8" class="csharp" rx="4">
-  <animate attributeName="width" from="0" to="255.86664085292173" dur="1.5s" begin="0.2s" fill="freeze"/>
+<rect x="25" y="12" width="212.5978285650257" height="8" class="csharp" rx="4">
+  <animate attributeName="width" from="0" to="212.5978285650257" dur="1.5s" begin="0.2s" fill="freeze"/>
 </rect>
 </g>
 <g transform="translate(60, 120)">
-<circle cx="8" cy="0" r="6" class="lua"/>
-<text x="25" y="4" class="fg-primary font-lang">Lua</text>
-<text x="460" y="4" class="fg-secondary font-percent">15.9%</text>
+<circle cx="8" cy="0" r="6" class="python"/>
+<text x="25" y="4" class="fg-primary font-lang">Python</text>
+<text x="460" y="4" class="fg-secondary font-percent">27.8%</text>
 <rect x="25" y="12" width="400" height="8" fill="#54546d" rx="4"/>
-<rect x="25" y="12" width="63.42810983303403" height="8" class="lua" rx="4">
-  <animate attributeName="width" from="0" to="63.42810983303403" dur="1.5s" begin="0.30000000000000004s" fill="freeze"/>
+<rect x="25" y="12" width="111.05836515009393" height="8" class="python" rx="4">
+  <animate attributeName="width" from="0" to="111.05836515009393" dur="1.5s" begin="0.30000000000000004s" fill="freeze"/>
 </rect>
 </g>
 <g transform="translate(60, 160)">
-<circle cx="8" cy="0" r="6" class="python"/>
-<text x="25" y="4" class="fg-primary font-lang">Python</text>
-<text x="460" y="4" class="fg-secondary font-percent">7.7%</text>
+<circle cx="8" cy="0" r="6" class="lua"/>
+<text x="25" y="4" class="fg-primary font-lang">Lua</text>
+<text x="460" y="4" class="fg-secondary font-percent">13.4%</text>
 <rect x="25" y="12" width="400" height="8" fill="#54546d" rx="4"/>
-<rect x="25" y="12" width="30.724676382426182" height="8" class="python" rx="4">
-  <animate attributeName="width" from="0" to="30.724676382426182" dur="1.5s" begin="0.4s" fill="freeze"/>
+<rect x="25" y="12" width="53.58484244532444" height="8" class="lua" rx="4">
+  <animate attributeName="width" from="0" to="53.58484244532444" dur="1.5s" begin="0.4s" fill="freeze"/>
 </rect>
 </g>
 <g transform="translate(60, 200)">
-<circle cx="8" cy="0" r="6" class="html"/>
-<text x="25" y="4" class="fg-primary font-lang">HTML</text>
-<text x="460" y="4" class="fg-secondary font-percent">3.7%</text>
+<circle cx="8" cy="0" r="6" class="shell"/>
+<text x="25" y="4" class="fg-primary font-lang">Shell</text>
+<text x="460" y="4" class="fg-secondary font-percent">2.4%</text>
 <rect x="25" y="12" width="400" height="8" fill="#54546d" rx="4"/>
-<rect x="25" y="12" width="14.75709488554052" height="8" class="html" rx="4">
-  <animate attributeName="width" from="0" to="14.75709488554052" dur="1.5s" begin="0.5s" fill="freeze"/>
+<rect x="25" y="12" width="9.522008064252198" height="8" class="shell" rx="4">
+  <animate attributeName="width" from="0" to="9.522008064252198" dur="1.5s" begin="0.5s" fill="freeze"/>
 </rect>
 </g>
 <g transform="translate(60, 240)">
-<circle cx="8" cy="0" r="6" class="shell"/>
-<text x="25" y="4" class="fg-primary font-lang">Shell</text>
-<text x="460" y="4" class="fg-secondary font-percent">2.9%</text>
+<circle cx="8" cy="0" r="6" class="javascript"/>
+<text x="25" y="4" class="fg-primary font-lang">JavaScript</text>
+<text x="460" y="4" class="fg-secondary font-percent">1.5%</text>
 <rect x="25" y="12" width="400" height="8" fill="#54546d" rx="4"/>
-<rect x="25" y="12" width="11.451689353833007" height="8" class="shell" rx="4">
-  <animate attributeName="width" from="0" to="11.451689353833007" dur="1.5s" begin="0.6000000000000001s" fill="freeze"/>
+<rect x="25" y="12" width="5.9233258134283275" height="8" class="javascript" rx="4">
+  <animate attributeName="width" from="0" to="5.9233258134283275" dur="1.5s" begin="0.6000000000000001s" fill="freeze"/>
 </rect>
 </g>
 <g transform="translate(60, 280)">
-<circle cx="8" cy="0" r="6" class="css"/>
-<text x="25" y="4" class="fg-primary font-lang">CSS</text>
-<text x="460" y="4" class="fg-secondary font-percent">1.8%</text>
+<circle cx="8" cy="0" r="6" class="vimscript"/>
+<text x="25" y="4" class="fg-primary font-lang">Vim Script</text>
+<text x="460" y="4" class="fg-secondary font-percent">0.6%</text>
 <rect x="25" y="12" width="400" height="8" fill="#54546d" rx="4"/>
-<rect x="25" y="12" width="7.12913325900755" height="8" class="css" rx="4">
-  <animate attributeName="width" from="0" to="7.12913325900755" dur="1.5s" begin="0.7s" fill="freeze"/>
+<rect x="25" y="12" width="2.283817523135218" height="8" class="vimscript" rx="4">
+  <animate attributeName="width" from="0" to="2.283817523135218" dur="1.5s" begin="0.7s" fill="freeze"/>
 </rect>
 </g>
 <line x1="60" y1="340" x2="540" y2="340" stroke="#54546d" stroke-width="1"/>

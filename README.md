@@ -21,8 +21,8 @@ The data comes from the GitHub API and updates automatically every 24 hours via 
 
 ### 1. Clone the repo
 ```bash
-git clone https://github.com/mavantgarderc/KanagawaLanguagesUsed.git
-cd KanagawaLanguagesUsed
+git clone https://github.com/mavantgarderc/RepositoryScanner.git
+cd RepositoryScanner
 ````
 
 ### 2. Create a GitHub Personal Access Token

@@ -6,7 +6,9 @@ on:
   workflow_dispatch:
   push:
     branches: [ main ]
-    paths: [ 'scripts/fetch_languages.py' ]
+    paths:
+      - 'scripts/fetch_languages.py'
+      - '.github/workflows/update-languages.yml'
 
 jobs:
   update-stats:
@@ -28,12 +30,13 @@ jobs:
       - name: Install dependencies
         run: |
           pip install --upgrade pip
-          pip install requests
+          pip install requests python-dotenv
           
       - name: Generate language statistics SVG
         env:
           USERNAME: ${{ github.repository_owner }}
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.GH_TOKEN }} # Use a PAT if private repos
+          EXCLUDED_LANGS: ${{ secrets.EXCLUDED_LANGS }} # e.g., "HTML,CSS,Dockerfile"
         run: python scripts/fetch_languages.py
         
       - name: Check for changes
