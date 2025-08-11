@@ -143,7 +143,6 @@ def generate_svg(top_langs, total_lines):
         ".font-footer { font-family: 'Courier New', monospace; font-size: 10px; }",
     ]
 
-    # Add language-specific colors
     for lang, lines in top_langs:
         class_name = (
             lang.lower()
