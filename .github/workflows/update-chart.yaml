@@ -1,7 +1,9 @@
 name: Update Language Stats
+
 on:
   schedule:
-    - cron: "0 0 * * *"  # Fixed: was "0 0 * **" (invalid cron)
+    # Run daily at midnight UTC
+    - cron: "0 0 * * *"
   workflow_dispatch:
   push:
     branches: [ main ]
@@ -9,7 +11,6 @@ on:
       - 'scripts/fetch_languages.py'
       - '.github/workflows/update-languages.yml'
 
-# Add concurrency control to prevent multiple workflows from running simultaneously
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
@@ -19,46 +20,111 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write
-      
+    
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          # Fetch full history to ensure force-with-lease works properly
           fetch-depth: 0
       
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: '3.11'
-          
+          cache: 'pip'
+      
       - name: Install dependencies
         run: |
+          echo "Python version: $(python --version)"
+          echo "Pip version: $(pip --version)"
           pip install --upgrade pip
           pip install requests python-dotenv
-          
+          echo "Dependencies installed successfully"
+      
+      - name: Verify script and dependencies exist
+        run: |
+          echo "Checking for required files..."
+          ls -la scripts/fetch_languages.py
+          ls -la scripts/colors.py
+          echo "Files verified"
+      
       - name: Generate language statistics SVG
         env:
           USERNAME: ${{ github.repository_owner }}
-          GH_TOKEN: ${{ secrets.GH_TOKEN }} # Use a PAT if private repos
-          EXCLUDED_LANGS: ${{ secrets.EXCLUDED_LANGS }} # e.g., "HTML,CSS,Dockerfile"
-        run: python scripts/fetch_languages.py
-        
-      - name: Check for changes
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+          EXCLUDED_LANGS: ${{ secrets.EXCLUDED_LANGS }}
+        run: |
+          echo "Running language statistics script..."
+          echo "Username: $USERNAME"
+          cd scripts
+          python fetch_languages.py
+          echo "Script completed successfully"
+      
+      - name: Check for changes and show diff
         id: verify-changed-files
         run: |
+          echo "Checking for changes in the repository..."
+          git status --porcelain
+          
           if [ -n "$(git status --porcelain)" ]; then
+            echo "Changes detected:"
+            git diff --name-only
             echo "changed=true" >> $GITHUB_OUTPUT
           else
+            echo "No changes detected"
             echo "changed=false" >> $GITHUB_OUTPUT
           fi
-          
+      
+      - name: Pull latest changes before commit
+        if: steps.verify-changed-files.outputs.changed == 'true'
+        run: |
+          echo "Pulling latest changes to avoid conflicts..."
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git pull origin main --rebase || echo "No remote changes to pull"
+      
       - name: Commit and push changes
         if: steps.verify-changed-files.outputs.changed == 'true'
         run: |
-          git config --local user.email "action@github.com"
-          git config --local user.name "GitHub Action"
+          echo "Committing and pushing changes..."
           git add assets/languages.svg
-          git commit -m "Update language statistics [skip ci]"
-          git push --force-with-lease origin main
+          git commit -m "Update language statistics [skip ci]" || exit 0
+          
+          # Try to push with retries in case of race conditions
+          max_retries=3
+          retry_count=0
+          
+          while [ $retry_count -lt $max_retries ]; do
+            if git push origin main; then
+              echo "Successfully pushed changes"
+              break
+            else
+              echo "Push failed, attempt $((retry_count + 1)) of $max_retries"
+              retry_count=$((retry_count + 1))
+              
+              if [ $retry_count -lt $max_retries ]; then
+                echo "Pulling latest changes and retrying..."
+                git pull origin main --rebase
+                sleep 5
+              else
+                echo "Max retries reached, push failed"
+                exit 1
+              fi
+            fi
+          done
+      
+      - name: Workflow summary
+        if: always()
+        run: |
+          echo "## Workflow Summary" >> $GITHUB_STEP_SUMMARY
+          echo "- **Repository**: ${{ github.repository }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Branch**: ${{ github.ref_name }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Trigger**: ${{ github.event_name }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Changes detected**: ${{ steps.verify-changed-files.outputs.changed }}" >> $GITHUB_STEP_SUMMARY
+          
+          if [ -f "assets/languages.svg" ]; then
+            echo "- **SVG file**: Generated successfully ✅" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "- **SVG file**: Not found ❌" >> $GITHUB_STEP_SUMMARY
+          fi
