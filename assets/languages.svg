@@ -13,14 +13,19 @@
 .python { fill: #e98a00; }
 .csharp { fill: #76946A; }
 .rust { fill: #ffa066; }
-.lua { fill: #624c83; }
+.lua { fill: #957fb8; }
 .shell { fill: #6a9589; }
 .javascript { fill: #dca561; }
 </style>
 </defs>
 <rect width="600" height="400" fill="#1f1f28" rx="12"/>
 <rect x="8" y="8" width="584" height="384" fill="none" stroke="#54546d" stroke-width="2" rx="8"/>
-<text x="300" y="40" text-anchor="middle" fill="#dcd7ba" class="font-title">Most Used Languages</text>
+
+        <text x="300" y="40" text-anchor="middle" fill="#dcd7ba" class="font-title">
+            <tspan x="300" dy="0">Most Used Languages</tspan>
+            <tspan x="300" dy="1.2em">(Public and Private Repositories)</tspan>
+        </text>
+        
 <g transform="translate(60, 80)">
 <circle cx="8" cy="0" r="6" class="python"/>
 <text x="25" y="4" class="fg-primary font-lang">Python</text>

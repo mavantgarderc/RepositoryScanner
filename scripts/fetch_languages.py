@@ -166,7 +166,12 @@ def generate_svg(top_langs, total_lines):
 
     # Title
     svg_parts.append(
-        f'<text x="300" y="40" text-anchor="middle" fill="{COLORS["fg_primary"]}" class="font-title">Most Used Languages</text>'
+        f"""
+        <text x="300" y="40" text-anchor="middle" fill="#dcd7ba" class="font-title">
+            <tspan x="300" dy="0">Most Used Languages</tspan>
+            <tspan x="300" dy="1.2em">(Public and Private Repositories)</tspan>
+        </text>
+        """
     )
 
     # Language bars

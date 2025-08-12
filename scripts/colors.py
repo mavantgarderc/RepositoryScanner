@@ -16,7 +16,7 @@ COLORS = {
         "PowerShell": "#6a9589",
         "LaTeX": "#e6c384",
         "Solidity": "#FF5D62",
-        "Lua": "#624c83",
+        "Lua": "#957fb8",
         "F#": "#7e9cd8",
         "C++": "#938aa9",
         "C": "#7aa89f",
