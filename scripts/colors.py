@@ -1,77 +1,47 @@
 COLORS = {
     "bg_primary": "#1f1f28",
-    "bg_secondary": "#2a2a37",
+    "bg_secondary": "#16161d",
     "fg_primary": "#dcd7ba",
-    "fg_secondary": "#c8c093",
-    "border": "#54546d",
+    "fg_secondary": "#727169",
+    "border": "#2a2a37",
     "languages": {
-        "Python": "#e98a00",
-        "C#": "#76946A",
-        "SQL": "#b35b79",
-        "JavaScript": "#dca561",
-        "TypeScript": "#7e9cd8",
-        "Rust": "#ffa066",
-        "Shell": "#6a9589",
-        "Bash": "#6a9589",
-        "PowerShell": "#6a9589",
-        "LaTeX": "#e6c384",
-        "Solidity": "#FF5D62",
-        "Lua": "#957fb8",
-        "F#": "#7e9cd8",
-        "C++": "#938aa9",
-        "C": "#7aa89f",
-        "MATLAB": "#e6c384",
-        "GraphQL": "#ff9e3b",
-        "Zig": "#e6c384",
-
-        "CSS": "#957fb8",
-        "HTML": "#e82424",
-        "Go": "#7fb4ca",
-        "Java": "#e6c384",
-        "PHP": "#d27e99",
-        "Ruby": "#ff5d62",
-        "Swift": "#ff9e3b",
-        "Kotlin": "#957fb8",
-        "Dart": "#7e9cd8",
-        "Scala": "#ff5d62",
-        "R": "#7e9cd8",
-        "Perl": "#938aa9",
-        "Haskell": "#957fb8",
-        "Clojure": "#98bb6c",
-        "Elixir": "#957fb8",
-        "Erlang": "#ff5d62",
-        "OCaml": "#e6c384",
-        "Nim": "#dca561",
-        "Crystal": "#7aa89f",
-        "D": "#ff5d62",
-        "V": "#7e9cd8",
-        "Assembly": "#938aa9",
-        "NASM": "#938aa9",
-        "Makefile": "#6a9589",
-        "CMake": "#6a9589",
-        "Dockerfile": "#7fb4ca",
-        "YAML": "#c8c093",
-        "JSON": "#c8c093",
-        "XML": "#e82424",
-        "Markdown": "#c8c093",
-        "Vue": "#98bb6c",
-        "Svelte": "#ff9e3b",
-        "React": "#7e9cd8",
-        "Angular": "#ff5d62",
-        "SCSS": "#ff9e3b",
-        "Sass": "#ff9e3b",
-        "Less": "#7fb4ca",
-        "Stylus": "#98bb6c",
-        "CoffeeScript": "#76946a",
-        "LiveScript": "#7e9cd8",
-        "PureScript": "#957fb8",
-        "Elm": "#7e9cd8",
-        "ReScript": "#ff5d62",
-        "Reason": "#ff5d62",
-        "VHDL": "#98bb6c",
-        "Verilog": "#7fb4ca",
-        "SystemVerilog": "#7fb4ca",
-        "WebAssembly": "#938aa9",
-        "WASM": "#938aa9",
+        "Python": "#ffa066",           # Muted blue (Python's blue logo)
+        "JavaScript": "#c0a36e",       # Muted gold/yellow (JS yellow)
+        "TypeScript": "#7e9cd8",       # Muted blue (TS blue logo)
+        "Java": "#d27e99",             # Muted reddish (Java's red/coffee tones)
+        "C": "#938aa9",                # Muted purple-grey (classic systems color)
+        "C++": "#938aa9",              # Muted purple (similar to C)
+        "C#": "#957fb8",               # Muted violet (C#'s purple logo)
+        "Go": "#7fb4ca",               # Muted cyan (Go's teal mascot)
+        "Rust": "#c8826b",             # Muted rust orange (Rust's orange logo)
+        "Ruby": "#c34043",             # Muted deep red (Ruby's red gem)
+        "PHP": "#938aa9",              # Muted purple-blue (PHP logo)
+        "Swift": "#d27e99",            # Muted coral-pink (Swift's orange tones)
+        "Kotlin": "#957fb8",           # Muted violet (Kotlin's purple/orange)
+        "Shell": "#98bb6c",            # Muted green (terminal green)
+        "Dart": "#7fb4ca",             # Muted teal-blue (Dart's blue logo)
+        "Scala": "#c8826b",            # Muted terracotta (Scala's red logo)
+        "R": "#7e9cd8",                # Muted blue (R's blue logo)
+        "Perl": "#938aa9",             # Muted purple-blue (Perl camel)
+        "Haskell": "#957fb8",          # Muted purple (Haskell's purple logo)
+        "Lua": "#7e9cd8",              # Muted blue (Lua's blue moon)
+        "Elixir": "#957fb8",           # Muted purple (Elixir's purple drop)
+        "Clojure": "#98bb6c",          # Muted green (Clojure's green logo)
+        "OCaml": "#c8826b",            # Muted orange (OCaml's camel)
+        "Vim script": "#98bb6c",       # Muted green (Vim green)
+        "Makefile": "#c8826b",         # Muted orange-tan
+        "HTML": "#d27e99",             # Muted coral (HTML's orange)
+        "CSS": "#7e9cd8",              # Muted blue (CSS's blue)
+        "SCSS": "#d27e99",             # Muted pink (Sass pink)
+        "Vue": "#98bb6c",              # Muted green (Vue's green logo)
+        "Svelte": "#d27e99",           # Muted coral (Svelte's orange-red)
+        "Objective-C": "#7fb4ca",      # Muted cyan-blue
+        "Assembly": "#727169",         # Muted grey (low-level)
+        "Dockerfile": "#7fb4ca",       # Muted cyan (Docker's blue whale)
+        "YAML": "#c0a36e",             # Muted gold
+        "JSON": "#c0a36e",             # Muted gold
+        "Markdown": "#727169",         # Muted grey
+        "TeX": "#98bb6c",              # Muted green
+        "SQL": "#7e9cd8",              # Muted blue
     },
 }

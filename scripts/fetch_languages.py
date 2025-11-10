@@ -127,9 +127,13 @@ def aggregate_languages():
 
 
 def generate_svg(top_langs, total_lines):
-    """Generate SVG visualization of language statistics."""
+    """Generate SVG visualization with a single stacked bar."""
+    # Smaller canvas since we have less content
+    svg_width = 600
+    svg_height = 280
+    
     svg_parts = [
-        '<svg width="600" height="400" viewBox="0 0 600 400" xmlns="http://www.w3.org/2000/svg">',
+        f'<svg width="{svg_width}" height="{svg_height}" viewBox="0 0 {svg_width} {svg_height}" xmlns="http://www.w3.org/2000/svg">',
         "<defs>",
         "<style>",
         f'.bg-primary {{ fill: {COLORS["bg_primary"]}; }}',
@@ -138,11 +142,12 @@ def generate_svg(top_langs, total_lines):
         f'.fg-secondary {{ fill: {COLORS["fg_secondary"]}; }}',
         f'.border {{ stroke: {COLORS["border"]}; }}',
         ".font-title { font-family: 'Courier New', monospace; font-size: 18px; font-weight: bold; }",
-        ".font-lang { font-family: 'Courier New', monospace; font-size: 14px; }",
+        ".font-lang { font-family: 'Courier New', monospace; font-size: 13px; }",
         ".font-percent { font-family: 'Courier New', monospace; font-size: 12px; }",
         ".font-footer { font-family: 'Courier New', monospace; font-size: 10px; }",
     ]
 
+    # Add color classes for each language
     for lang, lines in top_langs:
         class_name = (
             lang.lower()
@@ -158,31 +163,40 @@ def generate_svg(top_langs, total_lines):
 
     # Background
     svg_parts.append(
-        f'<rect width="600" height="400" fill="{COLORS["bg_primary"]}" rx="12"/>'
+        f'<rect width="{svg_width}" height="{svg_height}" fill="{COLORS["bg_primary"]}" rx="12"/>'
     )
     svg_parts.append(
-        f'<rect x="8" y="8" width="584" height="384" fill="none" stroke="{COLORS["border"]}" stroke-width="2" rx="8"/>'
+        f'<rect x="8" y="8" width="{svg_width-16}" height="{svg_height-16}" fill="none" stroke="{COLORS["border"]}" stroke-width="2" rx="8"/>'
     )
 
     # Title
     svg_parts.append(
         f"""
-        <text x="300" y="40" text-anchor="middle" fill="#dcd7ba" class="font-title">
-            <tspan x="300" dy="0">Most Used Languages</tspan>
-            <tspan x="300" dy="1.2em">(Public and Private Repositories)</tspan>
+        <text x="{svg_width/2}" y="35" text-anchor="middle" fill="#dcd7ba" class="font-title">
+            <tspan x="{svg_width/2}" dy="0">Most Used Languages</tspan>
+            <tspan x="{svg_width/2}" dy="1.2em">(Public and Private Repositories)</tspan>
         </text>
         """
     )
 
-    # Language bars
-    bar_width = 400
-    bar_height = 8
-    start_x = 60
-    start_y = 80
+    # Single stacked bar
+    bar_width = 480
+    bar_height = 24
+    bar_x = (svg_width - bar_width) / 2
+    bar_y = 85
+
+    # Draw stacked bar segments
+    current_x = bar_x
+    svg_parts.append(f'<g id="language-bar">')
 
     for i, (lang, lines) in enumerate(top_langs):
         percent = (lines / total_lines) * 100
-        bar_len = max((percent / 100) * bar_width, 2)
+        segment_width = (percent / 100) * bar_width
+
+        # Ensure minimum width for very small percentages
+        if segment_width < 2 and segment_width > 0:
+            segment_width = 2
+        
         class_name = (
             lang.lower()
             .replace("#", "sharp")
@@ -190,45 +204,86 @@ def generate_svg(top_langs, total_lines):
             .replace(" ", "")
             .replace("-", "dash")
         )
-        y_pos = start_y + i * 40
+        
+        # Determine border radius for first and last segments
+        if i == 0:
+            # First segment - rounded left
+            svg_parts.append(
+                f'<rect x="{current_x}" y="{bar_y}" width="{segment_width}" height="{bar_height}" '
+                f'class="{class_name}" rx="4" ry="4" style="border-radius: 4px 0 0 4px;"/>'
+            )
+        elif i == len(top_langs) - 1:
+            # Last segment - rounded right
+            svg_parts.append(
+                f'<rect x="{current_x}" y="{bar_y}" width="{segment_width}" height="{bar_height}" '
+                f'class="{class_name}" rx="4" ry="4" style="border-radius: 0 4px 4px 0;"/>'
+            )
+        else:
+            # Middle segments - no rounding
+            svg_parts.append(
+                f'<rect x="{current_x}" y="{bar_y}" width="{segment_width}" height="{bar_height}" '
+                f'class="{class_name}"/>'
+            )
+        
+        current_x += segment_width
+    
+    svg_parts.append('</g>')
 
-        svg_parts.append(f'<g transform="translate({start_x}, {y_pos})">')
-        svg_parts.append(f'<circle cx="8" cy="0" r="6" class="{class_name}"/>')
-        svg_parts.append(
-            f'<text x="25" y="4" class="fg-primary font-lang">{lang}</text>'
-        )
-        svg_parts.append(
-            f'<text x="460" y="4" class="fg-secondary font-percent">{percent:.1f}%</text>'
+    # Animate entire bar at once
+    svg_parts.append(
+        f'<rect x="{bar_x}" y="{bar_y}" width="{bar_width}" height="{bar_height}" '
+        f'fill="{COLORS["bg_primary"]}" rx="4">'
+    )
+    svg_parts.append(
+        f'  <animate attributeName="width" from="{bar_width}" to="0" dur="1.2s" fill="freeze"/>'
+    )
+    svg_parts.append('</rect>')
+
+    # Legend below bar - two columns
+    legend_start_y = bar_y + bar_height + 25
+    col_width = bar_width / 2
+    items_per_col = (len(top_langs) + 1) // 2
+    
+    for i, (lang, lines) in enumerate(top_langs):
+        percent = (lines / total_lines) * 100
+        class_name = (
+            lang.lower()
+            .replace("#", "sharp")
+            .replace("+", "plus")
+            .replace(" ", "")
+            .replace("-", "dash")
         )
 
-        # Background bar
-        svg_parts.append(
-            f'<rect x="25" y="12" width="{bar_width}" height="{bar_height}" fill="{COLORS["border"]}" rx="4"/>'
-        )
+        # Determine column and position
+        col = i // items_per_col
+        row = i % items_per_col
 
-        # Animated progress bar
+        x_pos = bar_x + (col * col_width)
+        y_pos = legend_start_y + (row * 22)
+
+        svg_parts.append(f'<g transform="translate({x_pos}, {y_pos})">')
+        svg_parts.append(f'<circle cx="6" cy="-3" r="5" class="{class_name}"/>')
         svg_parts.append(
-            f'<rect x="25" y="12" width="{bar_len}" height="{bar_height}" class="{class_name}" rx="4">'
+            f'<text x="18" y="0" class="fg-primary font-lang">{lang}</text>'
         )
         svg_parts.append(
-            f'  <animate attributeName="width" from="0" to="{bar_len}" dur="1.5s" begin="{0.2 + i*0.1}s" fill="freeze"/>'
+            f'<text x="180" y="0" class="fg-secondary font-percent" text-anchor="end">{percent:.1f}%</text>'
         )
-        svg_parts.append("</rect>")
-        svg_parts.append("</g>")
+        svg_parts.append('</g>')
 
     # Footer
-    footer_y = start_y + len(top_langs) * 40 + 20
+    footer_y = legend_start_y + (items_per_col * 22) + 15
     svg_parts.append(
-        f'<line x1="60" y1="{footer_y}" x2="540" y2="{footer_y}" stroke="{COLORS["border"]}" stroke-width="1"/>'
+        f'<line x1="60" y1="{footer_y}" x2="{svg_width-60}" y2="{footer_y}" stroke="{COLORS["border"]}" stroke-width="1"/>'
     )
 
     if USERNAME:
         svg_parts.append(
-            f'<text x="300" y="{footer_y + 25}" text-anchor="middle" class="fg-secondary font-footer">Based on repository analysis • github.com/{USERNAME}</text>'
+            f'<text x="{svg_width/2}" y="{footer_y + 18}" text-anchor="middle" class="fg-secondary font-footer">Based on repository analysis • github.com/{USERNAME}</text>'
         )
 
     svg_parts.append(
-        f'<text x="300" y="{footer_y + 40}" text-anchor="middle" class="fg-secondary font-footer" opacity="0.7">Kanagawa Theme • Updated automatically</text>'
+        f'<text x="{svg_width/2}" y="{footer_y + 33}" text-anchor="middle" class="fg-secondary font-footer" opacity="0.7">Kanagawa Theme • Updated automatically</text>'
     )
     svg_parts.append("</svg>")
 
