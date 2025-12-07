@@ -27,12 +27,12 @@
         </text>
         
 <g id="language-bar">
-<rect x="60.0" y="85" width="309.2129058998803" height="24" class="python" rx="4" ry="4" style="border-radius: 4px 0 0 4px;"/>
-<rect x="369.2129058998803" y="85" width="109.2430435086959" height="24" class="lua"/>
-<rect x="478.4559494085762" y="85" width="45.04166009565231" height="24" class="csharp"/>
-<rect x="523.4976095042285" y="85" width="8.710736937297176" height="24" class="rust"/>
-<rect x="532.2083464415257" y="85" width="3.8312118498817056" height="24" class="vimscript"/>
-<rect x="536.0395582914074" y="85" width="2.8217741137819794" height="24" class="shell" rx="4" ry="4" style="border-radius: 0 4px 4px 0;"/>
+<rect x="60.0" y="85" width="319.2109868086089" height="24" class="python" rx="4" ry="4" style="border-radius: 4px 0 0 4px;"/>
+<rect x="379.2109868086089" y="85" width="96.72858194361619" height="24" class="lua"/>
+<rect x="475.93956875222506" y="85" width="47.02445294820858" height="24" class="csharp"/>
+<rect x="522.9640217004336" y="85" width="8.992389646521241" height="24" class="rust"/>
+<rect x="531.9564113469548" y="85" width="3.955090139961873" height="24" class="vimscript"/>
+<rect x="535.9115014869167" y="85" width="2.9130132741062984" height="24" class="shell" rx="4" ry="4" style="border-radius: 0 4px 4px 0;"/>
 </g>
 <rect x="60.0" y="85" width="480" height="24" fill="#1f1f28" rx="4">
   <animate attributeName="width" from="480" to="0" dur="1.2s" fill="freeze"/>
@@ -40,22 +40,22 @@
 <g transform="translate(60.0, 134)">
 <circle cx="6" cy="-3" r="5" class="python"/>
 <text x="18" y="0" class="fg-primary font-lang">Python</text>
-<text x="180" y="0" class="fg-secondary font-percent" text-anchor="end">64.4%</text>
+<text x="180" y="0" class="fg-secondary font-percent" text-anchor="end">66.5%</text>
 </g>
 <g transform="translate(60.0, 156)">
 <circle cx="6" cy="-3" r="5" class="lua"/>
 <text x="18" y="0" class="fg-primary font-lang">Lua</text>
-<text x="180" y="0" class="fg-secondary font-percent" text-anchor="end">22.8%</text>
+<text x="180" y="0" class="fg-secondary font-percent" text-anchor="end">20.2%</text>
 </g>
 <g transform="translate(60.0, 178)">
 <circle cx="6" cy="-3" r="5" class="csharp"/>
 <text x="18" y="0" class="fg-primary font-lang">C#</text>
-<text x="180" y="0" class="fg-secondary font-percent" text-anchor="end">9.4%</text>
+<text x="180" y="0" class="fg-secondary font-percent" text-anchor="end">9.8%</text>
 </g>
 <g transform="translate(300.0, 134)">
 <circle cx="6" cy="-3" r="5" class="rust"/>
 <text x="18" y="0" class="fg-primary font-lang">Rust</text>
-<text x="180" y="0" class="fg-secondary font-percent" text-anchor="end">1.8%</text>
+<text x="180" y="0" class="fg-secondary font-percent" text-anchor="end">1.9%</text>
 </g>
 <g transform="translate(300.0, 156)">
 <circle cx="6" cy="-3" r="5" class="vimscript"/>
