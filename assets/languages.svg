@@ -27,12 +27,12 @@
         </text>
         
 <g id="language-bar">
-<rect x="60.0" y="85" width="316.0280158039571" height="24" class="python" rx="4" ry="4" style="border-radius: 4px 0 0 4px;"/>
-<rect x="376.0280158039571" y="85" width="95.76406541890081" height="24" class="lua"/>
-<rect x="471.7920812228579" y="85" width="51.34181252836423" height="24" class="csharp"/>
-<rect x="523.1338937512221" y="85" width="8.902723198027195" height="24" class="rust"/>
-<rect x="532.0366169492493" y="85" width="3.9156524709701386" height="24" class="vimscript"/>
-<rect x="535.9522694202194" y="85" width="2.8839665395927243" height="24" class="shell" rx="4" ry="4" style="border-radius: 0 4px 4px 0;"/>
+<rect x="60.0" y="85" width="316.0049531209049" height="24" class="python" rx="4" ry="4" style="border-radius: 4px 0 0 4px;"/>
+<rect x="376.0049531209049" y="85" width="95.75707687301849" height="24" class="lua"/>
+<rect x="471.76202999392336" y="85" width="51.33806577209436" height="24" class="csharp"/>
+<rect x="523.1000957660177" y="85" width="8.902073506629122" height="24" class="rust"/>
+<rect x="532.0021692726468" y="85" width="3.9153667195577184" height="24" class="vimscript"/>
+<rect x="535.9175359922045" y="85" width="2.91878489527179" height="24" class="shell" rx="4" ry="4" style="border-radius: 0 4px 4px 0;"/>
 </g>
 <rect x="60.0" y="85" width="480" height="24" fill="#1f1f28" rx="4">
   <animate attributeName="width" from="480" to="0" dur="1.2s" fill="freeze"/>
@@ -45,7 +45,7 @@
 <g transform="translate(60.0, 156)">
 <circle cx="6" cy="-3" r="5" class="lua"/>
 <text x="18" y="0" class="fg-primary font-lang">Lua</text>
-<text x="180" y="0" class="fg-secondary font-percent" text-anchor="end">20.0%</text>
+<text x="180" y="0" class="fg-secondary font-percent" text-anchor="end">19.9%</text>
 </g>
 <g transform="translate(60.0, 178)">
 <circle cx="6" cy="-3" r="5" class="csharp"/>
