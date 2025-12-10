@@ -27,12 +27,12 @@
         </text>
         
 <g id="language-bar">
-<rect x="60.0" y="85" width="316.0049531209049" height="24" class="python" rx="4" ry="4" style="border-radius: 4px 0 0 4px;"/>
-<rect x="376.0049531209049" y="85" width="95.75707687301849" height="24" class="lua"/>
-<rect x="471.76202999392336" y="85" width="51.33806577209436" height="24" class="csharp"/>
-<rect x="523.1000957660177" y="85" width="8.902073506629122" height="24" class="rust"/>
-<rect x="532.0021692726468" y="85" width="3.9153667195577184" height="24" class="vimscript"/>
-<rect x="535.9175359922045" y="85" width="2.91878489527179" height="24" class="shell" rx="4" ry="4" style="border-radius: 0 4px 4px 0;"/>
+<rect x="60.0" y="85" width="315.47216299601666" height="24" class="python" rx="4" ry="4" style="border-radius: 4px 0 0 4px;"/>
+<rect x="375.47216299601666" y="85" width="96.30663626733839" height="24" class="lua"/>
+<rect x="471.77879926335504" y="85" width="51.25150885517233" height="24" class="csharp"/>
+<rect x="523.0303081185274" y="85" width="8.88706444804153" height="24" class="rust"/>
+<rect x="531.9173725665689" y="85" width="3.908765339728401" height="24" class="vimscript"/>
+<rect x="535.8261379062973" y="85" width="3.0121449654251644" height="24" class="shell" rx="4" ry="4" style="border-radius: 0 4px 4px 0;"/>
 </g>
 <rect x="60.0" y="85" width="480" height="24" fill="#1f1f28" rx="4">
   <animate attributeName="width" from="480" to="0" dur="1.2s" fill="freeze"/>
@@ -40,12 +40,12 @@
 <g transform="translate(60.0, 134)">
 <circle cx="6" cy="-3" r="5" class="python"/>
 <text x="18" y="0" class="fg-primary font-lang">Python</text>
-<text x="180" y="0" class="fg-secondary font-percent" text-anchor="end">65.8%</text>
+<text x="180" y="0" class="fg-secondary font-percent" text-anchor="end">65.7%</text>
 </g>
 <g transform="translate(60.0, 156)">
 <circle cx="6" cy="-3" r="5" class="lua"/>
 <text x="18" y="0" class="fg-primary font-lang">Lua</text>
-<text x="180" y="0" class="fg-secondary font-percent" text-anchor="end">19.9%</text>
+<text x="180" y="0" class="fg-secondary font-percent" text-anchor="end">20.1%</text>
 </g>
 <g transform="translate(60.0, 178)">
 <circle cx="6" cy="-3" r="5" class="csharp"/>
