@@ -26,7 +26,6 @@ def _get_top_n(default: int = 6) -> int:
         return default
 
 
-# Prefer explicit GitHub-specific variable, but support USERNAME for backwards compatibility
 USERNAME = os.getenv("GITHUB_USERNAME") or os.getenv("USERNAME")
 TOKEN = os.getenv("GH_TOKEN")
 TOP_N = _get_top_n(6)
@@ -107,7 +106,6 @@ def get_repos():
         if not batch:
             break
 
-        # Filter out forks and archived repositories
         non_forks = [
             repo
             for repo in batch
@@ -118,8 +116,7 @@ def get_repos():
         print(f"Page {page}: {len(batch)} repos, {len(non_forks)} non-forks (active)")
         page += 1
 
-        # Safety check to avoid infinite loops
-        if page > 50:  # Assuming no user has more than 5000 repos
+        if page > 50:  
             print("Warning: Reached maximum page limit (50)")
             break
 
@@ -172,21 +169,14 @@ def aggregate_languages():
 
 
 def generate_svg(top_langs, total_size):
-    """Generate SVG visualization with a single stacked bar.
-
-    top_langs: list of (language, size_in_bytes) tuples.
-    total_size: total size in bytes across all languages.
-    """
     svg_width = 600
     svg_height = 280
 
-    # Bar geometry (defined early so we can use it in <defs>)
     bar_width = 480
     bar_height = 24
-    bar_x = (svg_width - bar_width) // 2  # integer for crisp alignment
+    bar_x = (svg_width - bar_width) // 2  
     bar_y = 85
 
-    # --- <svg>, <defs>, styles, clipPath ------------------------------------
     style_lines = [
         f'.bg-primary {{ fill: {COLORS["bg_primary"]}; }}',
         f'.bg-secondary {{ fill: {COLORS["bg_secondary"]}; }}',
@@ -199,7 +189,6 @@ def generate_svg(top_langs, total_size):
         ".font-footer { font-family: 'Courier New', monospace; font-size: 10px; }",
     ]
 
-    # Color classes for each language
     for lang, _ in top_langs:
         class_name = lang_to_class(lang)
         color = COLORS["languages"].get(lang, COLORS.get("accent", COLORS["fg_primary"]))
@@ -212,14 +201,12 @@ def generate_svg(top_langs, total_size):
         "<style>",
         *style_lines,
         "</style>",
-        # One rounded rect clipPath for the whole bar → no per‑segment rounding seams
         f'<clipPath id="barClip">'
         f'<rect x="{bar_x}" y="{bar_y}" width="{bar_width}" height="{bar_height}" rx="4" ry="4"/>'
         f'</clipPath>',
         "</defs>",
     ]
 
-    # --- Background ----------------------------------------------------------
     svg_parts.append(
         f'<rect width="{svg_width}" height="{svg_height}" '
         f'fill="{COLORS["bg_primary"]}" rx="12"/>'
@@ -229,7 +216,6 @@ def generate_svg(top_langs, total_size):
         f'fill="none" stroke="{COLORS["border"]}" stroke-width="2" rx="8"/>'
     )
 
-    # --- Title ---------------------------------------------------------------
     svg_parts.append(
         f"""
         <text x="{svg_width/2}" y="35" text-anchor="middle"
@@ -240,7 +226,6 @@ def generate_svg(top_langs, total_size):
         """
     )
 
-    # --- Pixel-perfect widths for the stacked bar ---------------------------
     if total_size <= 0:
         int_widths = [0] * len(top_langs)
     else:
@@ -250,7 +235,6 @@ def generate_svg(top_langs, total_size):
             raw = proportion * bar_width
             raw_widths.append(raw)
 
-        # Start with rounded widths, min 1px if >0
         int_widths = []
         for raw in raw_widths:
             if raw <= 0:
@@ -264,11 +248,9 @@ def generate_svg(top_langs, total_size):
         total_int = sum(int_widths)
         diff = bar_width - total_int
 
-        # Adjust so sum(int_widths) == bar_width
         if diff != 0 and len(int_widths) > 0:
             fracs = [rw - iw for rw, iw in zip(raw_widths, int_widths)]
             if diff > 0:
-                # Need to add pixels → to biggest positive fractional parts
                 order = sorted(range(len(int_widths)), key=lambda i: fracs[i], reverse=True)
                 for idx in order:
                     if diff <= 0:
@@ -276,8 +258,7 @@ def generate_svg(top_langs, total_size):
                     if int_widths[idx] > 0:
                         int_widths[idx] += 1
                         diff -= 1
-            else:  # diff < 0
-                # Need to remove pixels → from most negative fractional parts
+            else: 
                 order = sorted(range(len(int_widths)), key=lambda i: fracs[i])
                 for idx in order:
                     if diff >= 0:
@@ -285,9 +266,7 @@ def generate_svg(top_langs, total_size):
                     if int_widths[idx] > 1:
                         int_widths[idx] -= 1
                         diff += 1
-                # If |diff| still > 0, bar ends up slightly < bar_width; visually fine.
 
-    # --- Stacked bar using clipPath (no rounded corners per segment) --------
     current_x = bar_x
     svg_parts.append(
         f'<g id="language-bar" clip-path="url(#barClip)" shape-rendering="crispEdges">'
@@ -308,7 +287,6 @@ def generate_svg(top_langs, total_size):
 
     svg_parts.append("</g>")
 
-    # --- Curtain animation over the whole bar -------------------------------
     svg_parts.append(
         f'<rect x="{bar_x}" y="{bar_y}" width="{bar_width}" height="{bar_height}" '
         f'fill="{COLORS["bg_primary"]}" rx="4">'
@@ -319,7 +297,6 @@ def generate_svg(top_langs, total_size):
     )
     svg_parts.append("</rect>")
 
-    # --- Legend (same layout you have now) ----------------------------------
     legend_start_y = bar_y + bar_height + 25
     col_width = bar_width / 2
     row_height = 22
@@ -348,7 +325,6 @@ def generate_svg(top_langs, total_size):
         )
         svg_parts.append("</g>")
 
-    # --- Footer -------------------------------------------------------------
     footer_y = legend_start_y + (items_per_col * row_height) + 15
     svg_parts.append(
         f'<line x1="60" y1="{footer_y}" x2="{svg_width-60}" y2="{footer_y}" '

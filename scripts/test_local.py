@@ -1,15 +1,11 @@
 #!/usr/bin/env python3
-"""
-Local testing script for fetch_languages.py
-Run this to test your language stats generation locally
-"""
+
 import os
 import sys
 from pathlib import Path
 
 
 def setup_test_environment():
-    """Setup environment variables for local testing"""
 
     username = input("Enter your GitHub username: ").strip()
     if not username:
@@ -37,7 +33,6 @@ def setup_test_environment():
 
     top_langs_input = input("Top languages (default 6): ").strip()
 
-    # Prefer explicit GitHub-specific variable, keep USERNAME for backwards compatibility
     os.environ["GITHUB_USERNAME"] = username
     os.environ["USERNAME"] = username
 
@@ -68,7 +63,6 @@ def setup_test_environment():
 
 
 def display_language_stats(langs_data, excluded_data, total_lines, excluded_total):
-    """Display detailed language statistics"""
     if not langs_data and not excluded_data:
         print("No language data to display")
         return
@@ -83,7 +77,6 @@ def display_language_stats(langs_data, excluded_data, total_lines, excluded_tota
     print(f"Total code size (bytes): {total_lines:,}")
     print(f"Languages found: {len(langs_data)}")
 
-    # Sort languages by total size
     sorted_langs = sorted(
         langs_data.items(), key=lambda x: sum(x[1].values()), reverse=True
     )
@@ -96,7 +89,6 @@ def display_language_stats(langs_data, excluded_data, total_lines, excluded_tota
         percentage = (lang_total / total_lines) * 100 if total_lines else 0
         print(f"{lang}: {lang_total:,} bytes ({percentage:.2f}%)")
 
-    # Show excluded languages if any
     if excluded_data:
         print(f"\nExcluded Languages:")
         print("-" * 50)
@@ -121,7 +113,6 @@ def display_language_stats(langs_data, excluded_data, total_lines, excluded_tota
 
 
 def run_test_with_stats():
-    """Run the fetch_languages script and display detailed stats"""
     print("\n" + "=" * 50)
     print("Running language stats generation...")
     print("=" * 50)
@@ -129,13 +120,10 @@ def run_test_with_stats():
     try:
         sys.path.insert(0, "scripts")
 
-        # Import required modules
         from fetch_languages import EXCLUDED_LANGS, TOP_N, get_language_data, get_repos
 
-        # Get repository data
         repos = get_repos()
 
-        # Collect detailed language data with repository breakdown
         langs_detailed = {}
         excluded_detailed = {}
         total_lines = 0
@@ -150,13 +138,11 @@ def run_test_with_stats():
 
                 for lang, lines in langs.items():
                     if lang.lower() in EXCLUDED_LANGS:
-                        # Track excluded languages separately
                         if lang not in excluded_detailed:
                             excluded_detailed[lang] = {}
                         excluded_detailed[lang][repo_name] = lines
                         excluded_total += lines
                     else:
-                        # Track included languages
                         if lang not in langs_detailed:
                             langs_detailed[lang] = {}
                         langs_detailed[lang][repo_name] = lines
@@ -170,15 +156,12 @@ def run_test_with_stats():
             print("No language data found!")
             return False
 
-        # Display detailed statistics
         display_language_stats(
             langs_detailed, excluded_detailed, total_lines, excluded_total
         )
 
-        # Generate the SVG
         print(f"\nGenerating SVG...")
 
-        # Import and run the main SVG generation
         import fetch_languages
 
         langs_simple = {}

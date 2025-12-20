@@ -2,8 +2,8 @@ name: Update Language Stats
 
 on:
   schedule:
-    # Run daily at midnight UTC
-    - cron: "0 0 * * *"
+    # Run every Thursday
+    - cron: "0 0 * * 4"
   workflow_dispatch:
   push:
     branches: [main]
