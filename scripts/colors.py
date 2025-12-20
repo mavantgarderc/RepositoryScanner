@@ -4,8 +4,9 @@ COLORS = {
     "fg_primary": "#dcd7ba",
     "fg_secondary": "#727169",
     "border": "#2a2a37",
+    "accent": "#7e9cd8",  # Default accent for unknown languages
     "languages": {
-        "Python": "#ffa066",           # Muted blue (Python's blue logo)
+        "Python": "#ffa066",           # Muted warm orange (Kanagawa accent for Python)
         "JavaScript": "#c0a36e",       # Muted gold/yellow (JS yellow)
         "TypeScript": "#7e9cd8",       # Muted blue (TS blue logo)
         "Java": "#d27e99",             # Muted reddish (Java's red/coffee tones)
@@ -28,7 +29,7 @@ COLORS = {
         "Elixir": "#957fb8",           # Muted purple (Elixir's purple drop)
         "Clojure": "#98bb6c",          # Muted green (Clojure's green logo)
         "OCaml": "#c8826b",            # Muted orange (OCaml's camel)
-        "Vim script": "#98bb6c",       # Muted green (Vim green)
+        "Vim Script": "#98bb6c",       # Muted green (Vim green)
         "Makefile": "#c8826b",         # Muted orange-tan
         "HTML": "#d27e99",             # Muted coral (HTML's orange)
         "CSS": "#7e9cd8",              # Muted blue (CSS's blue)
