@@ -1,6 +1,6 @@
 # RepositoryScanner
 
-Account analyzer based on logical lines of code (indexed by GitHub from public & private repos) using the GitHub API, exporting a beautiful SVG card of your top languages.
+Account analyzer based on GitHub's language statistics (byte-based code size from public & private repos) using the GitHub API, exporting a beautiful SVG card of your top languages.
 
 The card:
 
@@ -8,9 +8,13 @@ The card:
 - Uses a **Kanagawa paper‑ink**–inspired theme
 - Updates automatically every 24 hours via **GitHub Actions**
 
+> **How languages are measured**  
+> GitHub’s language API returns the number of **bytes** of code per language.  
+> The percentages in this card are based on those byte-based sizes (not raw line counts), which matches how GitHub itself computes language stats.
+
 ---
 
-## 📊 Demo
+## Demo
 
 Once set up, your card will live at:
 
@@ -28,20 +32,27 @@ Example usage in a profile README:
 
 Replace `<username>` with your GitHub username.
 
----
-
-## ✨ Features
-
-- 🔍 **Comprehensive analysis**: scans both public and private repositories
-- 📈 **Top 6 languages** by total code size
-- 🎨 **Kanagawa theme** for a clean, paper‑ink look
-- ⚡ **Auto‑updates daily** via GitHub Actions
-- 📄 **SVG output** that looks sharp anywhere (profile, docs, dashboards)
-- 🧩 **Configurable** excluded languages and colors
+> If the card doesn’t seem to update right away, append a dummy query parameter
+> like `?v=1` to bypass browser caching:
+>
+> ```md
+> ![Languages](https://raw.githubusercontent.com/<username>/RepositoryScanner/main/assets/languages.svg?v=1)
+> ```
 
 ---
 
-## 🚀 Quick Start (Recommended: GitHub Actions)
+## Features
+
+- **Comprehensive analysis**: scans both public and private repositories
+- **Top 6 languages** by total code size
+- **Kanagawa theme** for a clean, paper‑ink look
+- **Auto‑updates daily** via GitHub Actions
+- **SVG output** that looks sharp anywhere (profile, docs, dashboards)
+- **Configurable** excluded languages and colors
+
+---
+
+## Quick Start (Recommended: GitHub Actions)
 
 ### 1. Fork this repository
 
@@ -50,13 +61,13 @@ Replace `<username>` with your GitHub username.
 
 ### 2. Create a GitHub Personal Access Token
 
-1. Go to
+1. Go to  
    https://github.com/settings/tokens
-2. Click **“Generate new token (classic)”**.
+2. Click **“Generate new token (classic)”** or create a fine-grained token.
 3. Give it a name (e.g. `RepositoryScanner Token`).
 4. Enable scopes:
-   - ✅ `repo` (for private repositories)
-   - ✅ `read:user`
+   - `repo` (for private repositories) or `public_repo` if you only care about public
+   - `read:user`
 5. Generate and **copy** the token (you won’t see it again).
 
 ### 3. Add repository secrets
@@ -66,13 +77,14 @@ In your **forked** repository:
 1. Go to **Settings → Secrets and variables → Actions**.
 2. Click **“New repository secret”** and add:
 
-| Secret name      | Required | Example value          | Notes                                     |
-| ---------------- | -------- | ---------------------- | ----------------------------------------- |
-| `GH_TOKEN`       | ✅       | `ghp_xxxxxxxxxxxx`     | Your personal access token                |
-| `USERNAME`       | ✅       | `your_github_username` | The account to analyze                    |
-| `EXCLUDED_LANGS` | ❌       | `HTML,CSS,Dockerfile`  | Comma‑separated list of languages to skip |
+| Secret name       | Required | Example value          | Notes                                     |
+| ----------------- | -------- | ---------------------- | ----------------------------------------- |
+| `GH_TOKEN`        | ✅       | `ghp_xxxxxxxxxxxx`     | Your personal access token                |
+| `GITHUB_USERNAME` | ✅       | `your_github_username` | The account to analyze                    |
+| `EXCLUDED_LANGS`  | ❌       | `HTML,CSS,Dockerfile`  | Comma‑separated list of languages to skip |
 
-> `USERNAME` is used by the script and in the workflow.
+> `GITHUB_USERNAME` is used by the script and in the workflow.  
+> For backwards compatibility, `USERNAME` is also supported and will be used if `GITHUB_USERNAME` is not set.  
 > `EXCLUDED_LANGS` is optional; use it to ignore markup / infra languages.
 
 ### 4. Run the workflow once
@@ -104,7 +116,7 @@ Replace `<username>` with your GitHub username.
 
 ---
 
-## 🛠 Local Development
+## Local Development
 
 You can run the generator locally for debugging or customization.
 
@@ -147,7 +159,7 @@ You can either:
 
    ```dotenv
    GH_TOKEN=ghp_xxxxxxxxxxxx
-   USERNAME=your_github_username
+   GITHUB_USERNAME=your_github_username
    EXCLUDED_LANGS=HTML,CSS,Dockerfile
    ```
 
@@ -155,9 +167,12 @@ You can either:
 
 ```bash
 export GH_TOKEN="ghp_xxxxxxxxxxxx"
-export USERNAME="your_github_username"
+export GITHUB_USERNAME="your_github_username"
 export EXCLUDED_LANGS="HTML,CSS,Dockerfile"
 ```
+
+> Note: On some systems, `USERNAME` is already set by the OS (e.g. your local login name).  
+> Prefer `GITHUB_USERNAME` to avoid confusion. For backwards compatibility, `USERNAME` is still supported.
 
 ### 4. Run the generator
 
@@ -177,7 +192,7 @@ Open it in a browser or image viewer to preview.
 
 ---
 
-## ⚙️ GitHub Actions Automation
+## GitHub Actions Automation
 
 The workflow file is:
 
@@ -214,15 +229,18 @@ Edit `.github/workflows/update-chart.yaml` and adjust the `cron` line. Examples:
 
 ---
 
-## 🎛 Configuration
+## Configuration
 
 ### Environment variables
 
-| Variable         | Required | Description                         | Example               |
-| ---------------- | -------- | ----------------------------------- | --------------------- |
-| `GH_TOKEN`       | ✅       | GitHub personal access token        | `ghp_xxxxxxxxxxxx`    |
-| `USERNAME`       | ✅       | GitHub username to analyze          | `mavantgarderc`       |
-| `EXCLUDED_LANGS` | ❌       | Comma‑separated languages to ignore | `HTML,CSS,Dockerfile` |
+| Variable          | Required | Description                         | Example               |
+| ----------------- | -------- | ----------------------------------- | --------------------- |
+| `GH_TOKEN`        | ✅       | GitHub personal access token        | `ghp_xxxxxxxxxxxx`    |
+| `GITHUB_USERNAME` | ✅       | GitHub username to analyze          | `mavantgarderc`       |
+| `EXCLUDED_LANGS`  | ❌       | Comma‑separated languages to ignore | `HTML,CSS,Dockerfile` |
+
+> For backwards compatibility, `USERNAME` is also supported and will be used if `GITHUB_USERNAME` is not set.  
+> If `GH_TOKEN` is not set, only **public** repositories will be analyzed and GitHub’s unauthenticated rate limits will apply. Using a token is strongly recommended.
 
 ### Colors
 
@@ -246,7 +264,7 @@ Modify that function if you want a different layout.
 
 ---
 
-## 🔒 Security & Privacy
+## Security & Privacy
 
 - Uses **GitHub’s API** to read:
   - Your list of repositories
@@ -260,24 +278,26 @@ Modify that function if you want a different layout.
 
 - Keep your `GH_TOKEN` private and never commit it.
 - Use GitHub Actions **secrets** for tokens.
-- If you only care about **public** repos, you can use a token with just `public_repo` instead of `repo`.
+- If you only care about **public** repos, you can use a token with just `public_repo` instead of full `repo`.
 
 ---
 
-## 🩺 Troubleshooting
+## Troubleshooting
 
 ### “401 Unauthorized” or API errors
 
 - Ensure `GH_TOKEN` is set and valid.
 - Confirm it has `repo` + `read:user` scopes (or `public_repo` if you only use public repos).
+- Without a token, you may hit GitHub’s unauthenticated rate limits quickly.
 
 ### “No language data found”
 
 Possible causes:
 
-- All repos are forks (these may be filtered out).
+- All repos are forks (these are filtered out).
 - All languages are in `EXCLUDED_LANGS`.
 - Token doesn’t have access to private repos you expect to see.
+- You’re running without `GH_TOKEN` and GitHub has rate-limited unauthenticated requests.
 
 ### Workflow not running
 
@@ -293,7 +313,7 @@ Possible causes:
 
 ---
 
-## 🤝 Contributing
+## Contributing
 
 Contributions are welcome!
 
@@ -307,13 +327,14 @@ Open a PR or issue on GitHub.
 
 ---
 
-## 📄 License
+## License
 
 This project is distributed under the [MIT License](LICENSE).
 
 Inspired by:
 
 - https://github.com/anuraghazra/github-readme-stats
-  Kanagawa color theme influenced by:
 
-- https://github.com/rebelot/kanagawa.nvim
+Kanagawa color theme influenced by:
+
+- https://github.com/rebelot/kanagawa-paper.nvim
