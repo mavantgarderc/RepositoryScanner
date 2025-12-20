@@ -7,9 +7,29 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
+
+def _get_top_n(default: int = 6) -> int:
+    """Read TOP_LANGS from env, falling back to default (strictly backwards-compatible)."""
+    raw = os.getenv("TOP_LANGS", "").strip()
+    if not raw:
+        return default
+    try:
+        value = int(raw)
+        if value <= 0:
+            print(
+                f"Warning: TOP_LANGS must be positive, got {raw!r}. Falling back to {default}."
+            )
+            return default
+        return value
+    except ValueError:
+        print(f"Warning: invalid TOP_LANGS value {raw!r}. Falling back to {default}.")
+        return default
+
+
+# Prefer explicit GitHub-specific variable, but support USERNAME for backwards compatibility
 USERNAME = os.getenv("GITHUB_USERNAME") or os.getenv("USERNAME")
 TOKEN = os.getenv("GH_TOKEN")
-TOP_N = 6
+TOP_N = _get_top_n(6)
 SVG_PATH = "assets/languages.svg"
 
 EXCLUDED_LANGS_RAW = os.getenv("EXCLUDED_LANGS", "")
@@ -30,6 +50,7 @@ if TOKEN:
 
 
 def lang_to_class(lang: str) -> str:
+    """Normalize a language name into a safe CSS class name."""
     return (
         lang.lower()
         .replace("#", "sharp")
@@ -40,6 +61,12 @@ def lang_to_class(lang: str) -> str:
 
 
 def get_repos():
+    """Fetch all repositories for the configured user.
+
+    When GH_TOKEN is set, uses the authenticated /user/repos endpoint.
+    When GH_TOKEN is not set, uses /users/{USERNAME}/repos and only public repos
+    are available.
+    """
     if not TOKEN and not USERNAME:
         raise ValueError(
             "GITHUB_USERNAME or USERNAME environment variable must be set when "
@@ -80,6 +107,7 @@ def get_repos():
         if not batch:
             break
 
+        # Filter out forks and archived repositories
         non_forks = [
             repo
             for repo in batch
@@ -90,7 +118,8 @@ def get_repos():
         print(f"Page {page}: {len(batch)} repos, {len(non_forks)} non-forks (active)")
         page += 1
 
-        if page > 50:  
+        # Safety check to avoid infinite loops
+        if page > 50:  # Assuming no user has more than 5000 repos
             print("Warning: Reached maximum page limit (50)")
             break
 
@@ -99,6 +128,11 @@ def get_repos():
 
 
 def get_language_data(repo):
+    """Fetch language data for a specific repository.
+
+    Works with or without GH_TOKEN. Without a token, only public repositories
+    are available and GitHub's unauthenticated rate limit will apply.
+    """
     repo_name = repo.get("name", "<unknown>")
 
     try:
@@ -111,6 +145,7 @@ def get_language_data(repo):
 
 
 def aggregate_languages():
+    """Aggregate language statistics across all repositories."""
     repos = get_repos()
     totals = {}
 
@@ -137,6 +172,12 @@ def aggregate_languages():
 
 
 def generate_svg(top_langs, total_size):
+    """Generate SVG visualization with a single stacked bar.
+
+    top_langs: list of (language, size_in_bytes) tuples.
+    total_size: total size in bytes across all languages.
+    """
+    # Smaller canvas since we have less content
     svg_width = 600
     svg_height = 280
 
@@ -155,15 +196,15 @@ def generate_svg(top_langs, total_size):
         ".font-footer { font-family: 'Courier New', monospace; font-size: 10px; }",
     ]
 
+    # Add color classes for each language
     for lang, _ in top_langs:
         class_name = lang_to_class(lang)
-        color = COLORS["languages"].get(
-            lang, COLORS.get("accent", COLORS["fg_primary"])
-        )
+        color = COLORS["languages"].get(lang, COLORS.get("accent", COLORS["fg_primary"]))
         svg_parts.append(f".{class_name} {{ fill: {color}; }}")
 
     svg_parts.extend(["</style>", "</defs>"])
 
+    # Background
     svg_parts.append(
         f'<rect width="{svg_width}" height="{svg_height}" fill="{COLORS["bg_primary"]}" rx="12"/>'
     )
@@ -171,6 +212,7 @@ def generate_svg(top_langs, total_size):
         f'<rect x="8" y="8" width="{svg_width-16}" height="{svg_height-16}" fill="none" stroke="{COLORS["border"]}" stroke-width="2" rx="8"/>'
     )
 
+    # Title
     svg_parts.append(
         f"""
         <text x="{svg_width/2}" y="35" text-anchor="middle" fill="{COLORS['fg_primary']}" class="font-title">
@@ -180,16 +222,19 @@ def generate_svg(top_langs, total_size):
         """
     )
 
+    # Single stacked bar
     bar_width = 480
     bar_height = 24
     bar_x = (svg_width - bar_width) / 2
     bar_y = 85
 
+    # Precompute segment widths with minimum size, then normalize total width
     raw_widths = []
     for _, size in top_langs:
         percent = (size / total_size) * 100
         segment_width = (percent / 100) * bar_width
 
+        # Ensure minimum width for very small percentages
         if 0 < segment_width < 2:
             segment_width = 2
 
@@ -202,23 +247,28 @@ def generate_svg(top_langs, total_size):
     else:
         widths = raw_widths
 
+    # Draw stacked bar segments
     current_x = bar_x
     svg_parts.append('<g id="language-bar">')
 
     for i, ((lang, _), segment_width) in enumerate(zip(top_langs, widths)):
         class_name = lang_to_class(lang)
 
+        # Determine border radius for first and last segments
         if i == 0:
+            # First segment - rounded left
             svg_parts.append(
                 f'<rect x="{current_x}" y="{bar_y}" width="{segment_width}" height="{bar_height}" '
                 f'class="{class_name}" rx="4" ry="4" style="border-radius: 4px 0 0 4px;"/>'
             )
         elif i == len(top_langs) - 1:
+            # Last segment - rounded right
             svg_parts.append(
                 f'<rect x="{current_x}" y="{bar_y}" width="{segment_width}" height="{bar_height}" '
                 f'class="{class_name}" rx="4" ry="4" style="border-radius: 0 4px 4px 0;"/>'
             )
         else:
+            # Middle segments - no rounding
             svg_parts.append(
                 f'<rect x="{current_x}" y="{bar_y}" width="{segment_width}" height="{bar_height}" '
                 f'class="{class_name}"/>'
@@ -228,6 +278,7 @@ def generate_svg(top_langs, total_size):
 
     svg_parts.append("</g>")
 
+    # Animate entire bar at once (curtain reveal from right to left)
     svg_parts.append(
         f'<rect x="{bar_x}" y="{bar_y}" width="{bar_width}" height="{bar_height}" '
         f'fill="{COLORS["bg_primary"]}" rx="4">'
@@ -237,49 +288,71 @@ def generate_svg(top_langs, total_size):
     )
     svg_parts.append("</rect>")
 
+    # Legend below bar - two columns, marker + language + percent (no overlap)
     legend_start_y = bar_y + bar_height + 25
     col_width = bar_width / 2
+    row_height = 22
     items_per_col = (len(top_langs) + 1) // 2
 
     for i, (lang, size) in enumerate(top_langs):
         percent = (size / total_size) * 100
         class_name = lang_to_class(lang)
 
+        # Column (0 or 1) and row index within that column
         col = i // items_per_col
         row = i % items_per_col
 
-        x_pos = bar_x + (col * col_width)
-        y_pos = legend_start_y + (row * 22)
+        # Left edge of this column
+        x_col_left = bar_x + (col * col_width)
+        # Baseline for this row
+        y = legend_start_y + (row * row_height)
 
-        svg_parts.append(f'<g transform="translate({x_pos}, {y_pos})">')
-        svg_parts.append(f'<circle cx="6" cy="-3" r="5" class="{class_name}"/>')
+        svg_parts.append(f'<g transform="translate({x_col_left}, {y})">')
+
+        # Color marker: small circle near the left, slightly above baseline
         svg_parts.append(
-            f'<text x="18" y="0" class="fg-primary font-lang">{lang}</text>'
+            f'<circle cx="8" cy="-3" r="5" class="{class_name}"/>'
         )
+
+        # Language name, left-aligned within the column
         svg_parts.append(
-            f'<text x="180" y="0" class="fg-secondary font-percent" text-anchor="end">{percent:.1f}%</text>'
+            f'<text x="24" y="0" class="fg-primary font-lang">{lang}</text>'
         )
+
+        # Percentage, right-aligned at the right edge of the column
+        svg_parts.append(
+            f'<text x="{col_width - 4}" y="0" class="fg-secondary font-percent" '
+            f'text-anchor="end">{percent:.2f}%</text>'
+        )
+
         svg_parts.append("</g>")
 
-    footer_y = legend_start_y + (items_per_col * 22) + 15
+    # Footer
+    footer_y = legend_start_y + (items_per_col * row_height) + 15
     svg_parts.append(
-        f'<line x1="60" y1="{footer_y}" x2="{svg_width-60}" y2="{footer_y}" stroke="{COLORS["border"]}" stroke-width="1"/>'
+        f'<line x1="60" y1="{footer_y}" x2="{svg_width-60}" y2="{footer_y}" '
+        f'stroke="{COLORS["border"]}" stroke-width="1"/>'
     )
 
     if USERNAME:
         svg_parts.append(
-            f'<text x="{svg_width/2}" y="{footer_y + 18}" text-anchor="middle" class="fg-secondary font-footer">Based on repository analysis • github.com/{USERNAME}</text>'
+            f'<text x="{svg_width/2}" y="{footer_y + 18}" text-anchor="middle" '
+            f'class="fg-secondary font-footer">Based on repository analysis • github.com/{USERNAME}</text>'
         )
 
     svg_parts.append(
-        f'<text x="{svg_width/2}" y="{footer_y + 33}" text-anchor="middle" class="fg-secondary font-footer" opacity="0.7">Kanagawa Theme • Updated automatically</text>'
+        f'<text x="{svg_width/2}" y="{footer_y + 33}" text-anchor="middle" '
+        f'class="fg-secondary font-footer" opacity="0.7">Kanagawa Theme • Updated automatically</text>'
     )
+
+    # Close SVG root element
     svg_parts.append("</svg>")
 
     return "\n".join(svg_parts)
 
 
 def main():
+    """Main function to orchestrate the language statistics generation."""
     print("Starting language statistics generation...")
 
     if not TOKEN:
@@ -307,7 +380,7 @@ def main():
         print(f"\nTop {TOP_N} languages (by byte size):")
         for lang, size in top_langs:
             percent = (size / total_size) * 100
-            print(f"  {lang}: {size:,} bytes ({percent:.1f}%)")
+            print(f"  {lang}: {size:,} bytes ({percent:.2f}%)")
 
         svg_content = generate_svg(top_langs, total_size)
 

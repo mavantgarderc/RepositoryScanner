@@ -14,7 +14,7 @@
 .lua { fill: #7e9cd8; }
 .csharp { fill: #957fb8; }
 .rust { fill: #c8826b; }
-.vimscript { fill: #dcd7ba; }
+.vimscript { fill: #98bb6c; }
 .shell { fill: #98bb6c; }
 </style>
 </defs>
@@ -27,45 +27,45 @@
         </text>
         
 <g id="language-bar">
-<rect x="60.0" y="85" width="316.78312346483847" height="24" class="python" rx="4" ry="4" style="border-radius: 4px 0 0 4px;"/>
-<rect x="376.78312346483847" y="85" width="112.17393011660322" height="24" class="lua"/>
-<rect x="488.9570535814417" y="85" width="34.13654081212602" height="24" class="csharp"/>
-<rect x="523.0935943935677" y="85" width="8.923995092142135" height="24" class="rust"/>
-<rect x="532.0175894857099" y="85" width="3.9250084110460746" height="24" class="vimscript"/>
-<rect x="535.942597896756" y="85" width="2.8908574009052317" height="24" class="shell" rx="4" ry="4" style="border-radius: 0 4px 4px 0;"/>
+<rect x="60.0" y="85" width="315.7716873519927" height="24" class="python" rx="4" ry="4" style="border-radius: 4px 0 0 4px;"/>
+<rect x="375.7716873519927" y="85" width="96.76095265267114" height="24" class="lua"/>
+<rect x="472.5326400046638" y="85" width="51.2255293815248" height="24" class="csharp"/>
+<rect x="523.7581693861886" y="85" width="8.882559580540278" height="24" class="rust"/>
+<rect x="532.6407289667288" y="85" width="3.896051930753108" height="24" class="vimscript"/>
+<rect x="536.5367808974819" y="85" width="3.4632191025180123" height="24" class="shell" rx="4" ry="4" style="border-radius: 0 4px 4px 0;"/>
 </g>
 <rect x="60.0" y="85" width="480" height="24" fill="#1f1f28" rx="4">
   <animate attributeName="width" from="480" to="0" dur="1.2s" fill="freeze"/>
 </rect>
 <g transform="translate(60.0, 134)">
-<circle cx="6" cy="-3" r="5" class="python"/>
-<text x="18" y="0" class="fg-primary font-lang">Python</text>
-<text x="180" y="0" class="fg-secondary font-percent" text-anchor="end">66.0%</text>
+<circle cx="8" cy="-3" r="5" class="python"/>
+<text x="24" y="0" class="fg-primary font-lang">Python</text>
+<text x="236.0" y="0" class="fg-secondary font-percent" text-anchor="end">65.63%</text>
 </g>
 <g transform="translate(60.0, 156)">
-<circle cx="6" cy="-3" r="5" class="lua"/>
-<text x="18" y="0" class="fg-primary font-lang">Lua</text>
-<text x="180" y="0" class="fg-secondary font-percent" text-anchor="end">23.4%</text>
+<circle cx="8" cy="-3" r="5" class="lua"/>
+<text x="24" y="0" class="fg-primary font-lang">Lua</text>
+<text x="236.0" y="0" class="fg-secondary font-percent" text-anchor="end">20.11%</text>
 </g>
 <g transform="translate(60.0, 178)">
-<circle cx="6" cy="-3" r="5" class="csharp"/>
-<text x="18" y="0" class="fg-primary font-lang">C#</text>
-<text x="180" y="0" class="fg-secondary font-percent" text-anchor="end">7.1%</text>
+<circle cx="8" cy="-3" r="5" class="csharp"/>
+<text x="24" y="0" class="fg-primary font-lang">C#</text>
+<text x="236.0" y="0" class="fg-secondary font-percent" text-anchor="end">10.65%</text>
 </g>
 <g transform="translate(300.0, 134)">
-<circle cx="6" cy="-3" r="5" class="rust"/>
-<text x="18" y="0" class="fg-primary font-lang">Rust</text>
-<text x="180" y="0" class="fg-secondary font-percent" text-anchor="end">1.9%</text>
+<circle cx="8" cy="-3" r="5" class="rust"/>
+<text x="24" y="0" class="fg-primary font-lang">Rust</text>
+<text x="236.0" y="0" class="fg-secondary font-percent" text-anchor="end">1.85%</text>
 </g>
 <g transform="translate(300.0, 156)">
-<circle cx="6" cy="-3" r="5" class="vimscript"/>
-<text x="18" y="0" class="fg-primary font-lang">Vim Script</text>
-<text x="180" y="0" class="fg-secondary font-percent" text-anchor="end">0.8%</text>
+<circle cx="8" cy="-3" r="5" class="vimscript"/>
+<text x="24" y="0" class="fg-primary font-lang">Vim Script</text>
+<text x="236.0" y="0" class="fg-secondary font-percent" text-anchor="end">0.81%</text>
 </g>
 <g transform="translate(300.0, 178)">
-<circle cx="6" cy="-3" r="5" class="shell"/>
-<text x="18" y="0" class="fg-primary font-lang">Shell</text>
-<text x="180" y="0" class="fg-secondary font-percent" text-anchor="end">0.6%</text>
+<circle cx="8" cy="-3" r="5" class="shell"/>
+<text x="24" y="0" class="fg-primary font-lang">Shell</text>
+<text x="236.0" y="0" class="fg-secondary font-percent" text-anchor="end">0.72%</text>
 </g>
 <line x1="60" y1="215" x2="540" y2="215" stroke="#2a2a37" stroke-width="1"/>
 <text x="300.0" y="233" text-anchor="middle" class="fg-secondary font-footer">Based on repository analysis • github.com/mavantgarderc</text>
