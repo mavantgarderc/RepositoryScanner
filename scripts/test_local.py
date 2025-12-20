@@ -1,16 +1,10 @@
-#!/usr/bin/env python3
-"""
-Local testing script for fetch_languages.py
-Run this to test your language stats generation locally
-"""
+
 import os
 import sys
 from pathlib import Path
 
 
 def setup_test_environment():
-    """Setup environment variables for local testing"""
-
     username = input("Enter your GitHub username: ").strip()
     if not username:
         print("Username is required")
@@ -31,12 +25,16 @@ def setup_test_environment():
 
     excluded = input("Excluded languages: ").strip()
 
+    os.environ["GITHUB_USERNAME"] = username
     os.environ["USERNAME"] = username
+
     if token:
         os.environ["GH_TOKEN"] = token
         print("Token provided - will include private repos")
     else:
-        print("No token provided - only public repos will be analyzed")
+        print(
+            "No token provided - only public repos will be analyzed (rate limits will be lower)"
+        )
 
     if excluded:
         os.environ["EXCLUDED_LANGS"] = excluded
@@ -46,20 +44,20 @@ def setup_test_environment():
 
 
 def display_language_stats(langs_data, excluded_data, total_lines, excluded_total):
-    """Display detailed language statistics"""
-    if not langs_data:
+    if not langs_data and not excluded_data:
         print("No language data to display")
         return
 
     print(f"\nLanguage Statistics")
     print("=" * 50)
-    print(
-        f"Total repositories analyzed: {len(set(repo for lang_repos in langs_data.values() for repo in lang_repos))}"
-    )
-    print(f"Total lines of code: {total_lines:,}")
+
+    unique_repos = {
+        repo_name for repo_data in langs_data.values() for repo_name in repo_data
+    }
+    print(f"Total repositories analyzed: {len(unique_repos)}")
+    print(f"Total code size (bytes): {total_lines:,}")
     print(f"Languages found: {len(langs_data)}")
 
-    # Sort languages by total lines
     sorted_langs = sorted(
         langs_data.items(), key=lambda x: sum(x[1].values()), reverse=True
     )
@@ -69,10 +67,9 @@ def display_language_stats(langs_data, excluded_data, total_lines, excluded_tota
 
     for lang, repo_data in sorted_langs:
         lang_total = sum(repo_data.values())
-        percentage = (lang_total / total_lines) * 100
-        print(f"{lang}: {lang_total:,} lines ({percentage:.1f}%)")
+        percentage = (lang_total / total_lines) * 100 if total_lines else 0
+        print(f"{lang}: {lang_total:,} bytes ({percentage:.1f}%)")
 
-    # Show excluded languages if any
     if excluded_data:
         print(f"\nExcluded Languages:")
         print("-" * 50)
@@ -84,15 +81,19 @@ def display_language_stats(langs_data, excluded_data, total_lines, excluded_tota
         for lang, repo_data in sorted_excluded:
             lang_total = sum(repo_data.values())
             total_with_excluded = total_lines + excluded_total
-            percentage = (lang_total / total_with_excluded) * 100
-            print(f"{lang}: {lang_total:,} lines ({percentage:.1f}%)")
+            percentage = (
+                (lang_total / total_with_excluded) * 100 if total_with_excluded else 0
+            )
+            print(f"{lang}: {lang_total:,} bytes ({percentage:.1f}%)")
 
-        print(f"\nTotal excluded lines: {excluded_total:,}")
-        print(f"Total lines (including excluded): {total_lines + excluded_total:,}")
+        print(f"\nTotal excluded bytes: {excluded_total:,}")
+        print(
+            f"Total code size including excluded (bytes): "
+            f"{total_lines + excluded_total:,}"
+        )
 
 
 def run_test_with_stats():
-    """Run the fetch_languages script and display detailed stats"""
     print("\n" + "=" * 50)
     print("Running language stats generation...")
     print("=" * 50)
@@ -100,13 +101,10 @@ def run_test_with_stats():
     try:
         sys.path.insert(0, "scripts")
 
-        # Import required modules
-        from fetch_languages import get_repos, get_language_data, EXCLUDED_LANGS
+        from fetch_languages import EXCLUDED_LANGS, TOP_N, get_language_data, get_repos
 
-        # Get repository data
         repos = get_repos()
 
-        # Collect detailed language data with repository breakdown
         langs_detailed = {}
         excluded_detailed = {}
         total_lines = 0
@@ -121,13 +119,11 @@ def run_test_with_stats():
 
                 for lang, lines in langs.items():
                     if lang.lower() in EXCLUDED_LANGS:
-                        # Track excluded languages separately
                         if lang not in excluded_detailed:
                             excluded_detailed[lang] = {}
                         excluded_detailed[lang][repo_name] = lines
                         excluded_total += lines
                     else:
-                        # Track included languages
                         if lang not in langs_detailed:
                             langs_detailed[lang] = {}
                         langs_detailed[lang][repo_name] = lines
@@ -141,22 +137,21 @@ def run_test_with_stats():
             print("No language data found!")
             return False
 
-        # Display detailed statistics
         display_language_stats(
             langs_detailed, excluded_detailed, total_lines, excluded_total
         )
 
-        # Generate the SVG
         print(f"\nGenerating SVG...")
 
-        # Import and run the main SVG generation
         import fetch_languages
 
         langs_simple = {}
         for lang, repo_data in langs_detailed.items():
             langs_simple[lang] = sum(repo_data.values())
 
-        top_langs = sorted(langs_simple.items(), key=lambda x: x[1], reverse=True)[:6]
+        top_langs = sorted(langs_simple.items(), key=lambda x: x[1], reverse=True)[
+            :TOP_N
+        ]
 
         svg_content = fetch_languages.generate_svg(top_langs, total_lines)
 
