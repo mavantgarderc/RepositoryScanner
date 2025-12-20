@@ -17,24 +17,26 @@
 .vimscript { fill: #98bb6c; }
 .shell { fill: #98bb6c; }
 </style>
+<clipPath id="barClip"><rect x="60" y="85" width="480" height="24" rx="4" ry="4"/></clipPath>
 </defs>
 <rect width="600" height="280" fill="#1f1f28" rx="12"/>
 <rect x="8" y="8" width="584" height="264" fill="none" stroke="#2a2a37" stroke-width="2" rx="8"/>
 
-        <text x="300.0" y="35" text-anchor="middle" fill="#dcd7ba" class="font-title">
+        <text x="300.0" y="35" text-anchor="middle"
+              fill="#dcd7ba" class="font-title">
             <tspan x="300.0" dy="0">Most Used Languages</tspan>
             <tspan x="300.0" dy="1.2em">(Public and Private Repositories)</tspan>
         </text>
         
-<g id="language-bar">
-<rect x="60.0" y="85" width="315.7716873519927" height="24" class="python" rx="4" ry="4" style="border-radius: 4px 0 0 4px;"/>
-<rect x="375.7716873519927" y="85" width="96.76095265267114" height="24" class="lua"/>
-<rect x="472.5326400046638" y="85" width="51.2255293815248" height="24" class="csharp"/>
-<rect x="523.7581693861886" y="85" width="8.882559580540278" height="24" class="rust"/>
-<rect x="532.6407289667288" y="85" width="3.896051930753108" height="24" class="vimscript"/>
-<rect x="536.5367808974819" y="85" width="3.4632191025180123" height="24" class="shell" rx="4" ry="4" style="border-radius: 0 4px 4px 0;"/>
+<g id="language-bar" clip-path="url(#barClip)" shape-rendering="crispEdges">
+<rect x="60" y="85" width="315" height="24" class="python"/>
+<rect x="375" y="85" width="97" height="24" class="lua"/>
+<rect x="472" y="85" width="51" height="24" class="csharp"/>
+<rect x="523" y="85" width="9" height="24" class="rust"/>
+<rect x="532" y="85" width="4" height="24" class="vimscript"/>
+<rect x="536" y="85" width="4" height="24" class="shell"/>
 </g>
-<rect x="60.0" y="85" width="480" height="24" fill="#1f1f28" rx="4">
+<rect x="60" y="85" width="480" height="24" fill="#1f1f28" rx="4">
   <animate attributeName="width" from="480" to="0" dur="1.2s" fill="freeze"/>
 </rect>
 <g transform="translate(60.0, 134)">
@@ -45,12 +47,12 @@
 <g transform="translate(60.0, 156)">
 <circle cx="8" cy="-3" r="5" class="lua"/>
 <text x="24" y="0" class="fg-primary font-lang">Lua</text>
-<text x="236.0" y="0" class="fg-secondary font-percent" text-anchor="end">20.11%</text>
+<text x="236.0" y="0" class="fg-secondary font-percent" text-anchor="end">20.10%</text>
 </g>
 <g transform="translate(60.0, 178)">
 <circle cx="8" cy="-3" r="5" class="csharp"/>
 <text x="24" y="0" class="fg-primary font-lang">C#</text>
-<text x="236.0" y="0" class="fg-secondary font-percent" text-anchor="end">10.65%</text>
+<text x="236.0" y="0" class="fg-secondary font-percent" text-anchor="end">10.64%</text>
 </g>
 <g transform="translate(300.0, 134)">
 <circle cx="8" cy="-3" r="5" class="rust"/>

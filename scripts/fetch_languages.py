@@ -177,14 +177,17 @@ def generate_svg(top_langs, total_size):
     top_langs: list of (language, size_in_bytes) tuples.
     total_size: total size in bytes across all languages.
     """
-    # Smaller canvas since we have less content
     svg_width = 600
     svg_height = 280
 
-    svg_parts = [
-        f'<svg width="{svg_width}" height="{svg_height}" viewBox="0 0 {svg_width} {svg_height}" xmlns="http://www.w3.org/2000/svg">',
-        "<defs>",
-        "<style>",
+    # Bar geometry (defined early so we can use it in <defs>)
+    bar_width = 480
+    bar_height = 24
+    bar_x = (svg_width - bar_width) // 2  # integer for crisp alignment
+    bar_y = 85
+
+    # --- <svg>, <defs>, styles, clipPath ------------------------------------
+    style_lines = [
         f'.bg-primary {{ fill: {COLORS["bg_primary"]}; }}',
         f'.bg-secondary {{ fill: {COLORS["bg_secondary"]}; }}',
         f'.fg-primary {{ fill: {COLORS["fg_primary"]}; }}',
@@ -196,138 +199,156 @@ def generate_svg(top_langs, total_size):
         ".font-footer { font-family: 'Courier New', monospace; font-size: 10px; }",
     ]
 
-    # Add color classes for each language
+    # Color classes for each language
     for lang, _ in top_langs:
         class_name = lang_to_class(lang)
         color = COLORS["languages"].get(lang, COLORS.get("accent", COLORS["fg_primary"]))
-        svg_parts.append(f".{class_name} {{ fill: {color}; }}")
+        style_lines.append(f".{class_name} {{ fill: {color}; }}")
 
-    svg_parts.extend(["</style>", "</defs>"])
+    svg_parts = [
+        f'<svg width="{svg_width}" height="{svg_height}" viewBox="0 0 {svg_width} {svg_height}" '
+        f'xmlns="http://www.w3.org/2000/svg">',
+        "<defs>",
+        "<style>",
+        *style_lines,
+        "</style>",
+        # One rounded rect clipPath for the whole bar → no per‑segment rounding seams
+        f'<clipPath id="barClip">'
+        f'<rect x="{bar_x}" y="{bar_y}" width="{bar_width}" height="{bar_height}" rx="4" ry="4"/>'
+        f'</clipPath>',
+        "</defs>",
+    ]
 
-    # Background
+    # --- Background ----------------------------------------------------------
     svg_parts.append(
-        f'<rect width="{svg_width}" height="{svg_height}" fill="{COLORS["bg_primary"]}" rx="12"/>'
+        f'<rect width="{svg_width}" height="{svg_height}" '
+        f'fill="{COLORS["bg_primary"]}" rx="12"/>'
     )
     svg_parts.append(
-        f'<rect x="8" y="8" width="{svg_width-16}" height="{svg_height-16}" fill="none" stroke="{COLORS["border"]}" stroke-width="2" rx="8"/>'
+        f'<rect x="8" y="8" width="{svg_width-16}" height="{svg_height-16}" '
+        f'fill="none" stroke="{COLORS["border"]}" stroke-width="2" rx="8"/>'
     )
 
-    # Title
+    # --- Title ---------------------------------------------------------------
     svg_parts.append(
         f"""
-        <text x="{svg_width/2}" y="35" text-anchor="middle" fill="{COLORS['fg_primary']}" class="font-title">
+        <text x="{svg_width/2}" y="35" text-anchor="middle"
+              fill="{COLORS['fg_primary']}" class="font-title">
             <tspan x="{svg_width/2}" dy="0">Most Used Languages</tspan>
             <tspan x="{svg_width/2}" dy="1.2em">(Public and Private Repositories)</tspan>
         </text>
         """
     )
 
-    # Single stacked bar
-    bar_width = 480
-    bar_height = 24
-    bar_x = (svg_width - bar_width) / 2
-    bar_y = 85
-
-    # Precompute segment widths with minimum size, then normalize total width
-    raw_widths = []
-    for _, size in top_langs:
-        percent = (size / total_size) * 100
-        segment_width = (percent / 100) * bar_width
-
-        # Ensure minimum width for very small percentages
-        if 0 < segment_width < 2:
-            segment_width = 2
-
-        raw_widths.append(segment_width)
-
-    total_segment_width = sum(raw_widths)
-    if total_segment_width > 0 and abs(total_segment_width - bar_width) > 0.01:
-        scale = bar_width / total_segment_width
-        widths = [w * scale for w in raw_widths]
+    # --- Pixel-perfect widths for the stacked bar ---------------------------
+    if total_size <= 0:
+        int_widths = [0] * len(top_langs)
     else:
-        widths = raw_widths
+        raw_widths = []
+        for _, size in top_langs:
+            proportion = size / total_size
+            raw = proportion * bar_width
+            raw_widths.append(raw)
 
-    # Draw stacked bar segments
+        # Start with rounded widths, min 1px if >0
+        int_widths = []
+        for raw in raw_widths:
+            if raw <= 0:
+                int_widths.append(0)
+            else:
+                w_int = int(round(raw))
+                if w_int < 1:
+                    w_int = 1
+                int_widths.append(w_int)
+
+        total_int = sum(int_widths)
+        diff = bar_width - total_int
+
+        # Adjust so sum(int_widths) == bar_width
+        if diff != 0 and len(int_widths) > 0:
+            fracs = [rw - iw for rw, iw in zip(raw_widths, int_widths)]
+            if diff > 0:
+                # Need to add pixels → to biggest positive fractional parts
+                order = sorted(range(len(int_widths)), key=lambda i: fracs[i], reverse=True)
+                for idx in order:
+                    if diff <= 0:
+                        break
+                    if int_widths[idx] > 0:
+                        int_widths[idx] += 1
+                        diff -= 1
+            else:  # diff < 0
+                # Need to remove pixels → from most negative fractional parts
+                order = sorted(range(len(int_widths)), key=lambda i: fracs[i])
+                for idx in order:
+                    if diff >= 0:
+                        break
+                    if int_widths[idx] > 1:
+                        int_widths[idx] -= 1
+                        diff += 1
+                # If |diff| still > 0, bar ends up slightly < bar_width; visually fine.
+
+    # --- Stacked bar using clipPath (no rounded corners per segment) --------
     current_x = bar_x
-    svg_parts.append('<g id="language-bar">')
+    svg_parts.append(
+        f'<g id="language-bar" clip-path="url(#barClip)" shape-rendering="crispEdges">'
+    )
 
-    for i, ((lang, _), segment_width) in enumerate(zip(top_langs, widths)):
+    for (lang, _), segment_width in zip(top_langs, int_widths):
+        if segment_width <= 0:
+            continue
+
         class_name = lang_to_class(lang)
 
-        # Determine border radius for first and last segments
-        if i == 0:
-            # First segment - rounded left
-            svg_parts.append(
-                f'<rect x="{current_x}" y="{bar_y}" width="{segment_width}" height="{bar_height}" '
-                f'class="{class_name}" rx="4" ry="4" style="border-radius: 4px 0 0 4px;"/>'
-            )
-        elif i == len(top_langs) - 1:
-            # Last segment - rounded right
-            svg_parts.append(
-                f'<rect x="{current_x}" y="{bar_y}" width="{segment_width}" height="{bar_height}" '
-                f'class="{class_name}" rx="4" ry="4" style="border-radius: 0 4px 4px 0;"/>'
-            )
-        else:
-            # Middle segments - no rounding
-            svg_parts.append(
-                f'<rect x="{current_x}" y="{bar_y}" width="{segment_width}" height="{bar_height}" '
-                f'class="{class_name}"/>'
-            )
+        svg_parts.append(
+            f'<rect x="{current_x}" y="{bar_y}" width="{segment_width}" '
+            f'height="{bar_height}" class="{class_name}"/>'
+        )
 
         current_x += segment_width
 
     svg_parts.append("</g>")
 
-    # Animate entire bar at once (curtain reveal from right to left)
+    # --- Curtain animation over the whole bar -------------------------------
     svg_parts.append(
         f'<rect x="{bar_x}" y="{bar_y}" width="{bar_width}" height="{bar_height}" '
         f'fill="{COLORS["bg_primary"]}" rx="4">'
     )
     svg_parts.append(
-        f'  <animate attributeName="width" from="{bar_width}" to="0" dur="1.2s" fill="freeze"/>'
+        f'  <animate attributeName="width" from="{bar_width}" to="0" '
+        f'dur="1.2s" fill="freeze"/>'
     )
     svg_parts.append("</rect>")
 
-    # Legend below bar - two columns, marker + language + percent (no overlap)
+    # --- Legend (same layout you have now) ----------------------------------
     legend_start_y = bar_y + bar_height + 25
     col_width = bar_width / 2
     row_height = 22
     items_per_col = (len(top_langs) + 1) // 2
 
     for i, (lang, size) in enumerate(top_langs):
-        percent = (size / total_size) * 100
+        percent = (size / total_size) * 100 if total_size else 0.0
         class_name = lang_to_class(lang)
 
-        # Column (0 or 1) and row index within that column
         col = i // items_per_col
         row = i % items_per_col
 
-        # Left edge of this column
         x_col_left = bar_x + (col * col_width)
-        # Baseline for this row
         y = legend_start_y + (row * row_height)
 
         svg_parts.append(f'<g transform="translate({x_col_left}, {y})">')
-
-        # Color marker: small circle near the left, slightly above baseline
         svg_parts.append(
             f'<circle cx="8" cy="-3" r="5" class="{class_name}"/>'
         )
-
-        # Language name, left-aligned within the column
         svg_parts.append(
             f'<text x="24" y="0" class="fg-primary font-lang">{lang}</text>'
         )
-
-        # Percentage, right-aligned at the right edge of the column
         svg_parts.append(
             f'<text x="{col_width - 4}" y="0" class="fg-secondary font-percent" '
             f'text-anchor="end">{percent:.2f}%</text>'
         )
-
         svg_parts.append("</g>")
 
-    # Footer
+    # --- Footer -------------------------------------------------------------
     footer_y = legend_start_y + (items_per_col * row_height) + 15
     svg_parts.append(
         f'<line x1="60" y1="{footer_y}" x2="{svg_width-60}" y2="{footer_y}" '
@@ -337,15 +358,18 @@ def generate_svg(top_langs, total_size):
     if USERNAME:
         svg_parts.append(
             f'<text x="{svg_width/2}" y="{footer_y + 18}" text-anchor="middle" '
-            f'class="fg-secondary font-footer">Based on repository analysis • github.com/{USERNAME}</text>'
+            f'class="fg-secondary font-footer">'
+            f'Based on repository analysis • github.com/{USERNAME}'
+            f'</text>'
         )
 
     svg_parts.append(
         f'<text x="{svg_width/2}" y="{footer_y + 33}" text-anchor="middle" '
-        f'class="fg-secondary font-footer" opacity="0.7">Kanagawa Theme • Updated automatically</text>'
+        f'class="fg-secondary font-footer" opacity="0.7">'
+        f'Kanagawa Theme • Updated automatically'
+        f'</text>'
     )
 
-    # Close SVG root element
     svg_parts.append("</svg>")
 
     return "\n".join(svg_parts)
