@@ -117,10 +117,13 @@ def run_test_with_stats():
     print("Running language stats generation...")
     print("=" * 50)
 
+    # Get the token from environment variables
+    token = os.getenv("GH_TOKEN", "")
+
     try:
         sys.path.insert(0, "scripts")
 
-        from fetch_languages import EXCLUDED_LANGS, TOP_N, get_language_data, get_repos
+        from fetch_languages import EXCLUDED_LANGS, TOP_N, get_language_data, get_repos, get_contribution_data
 
         repos = get_repos()
 
@@ -172,7 +175,15 @@ def run_test_with_stats():
             :TOP_N
         ]
 
-        svg_content = fetch_languages.generate_svg(top_langs, total_lines)
+        # Get contribution data if token is available
+        contribution_data = None
+        if token:
+            print("Fetching contribution data...")
+            contribution_data = fetch_languages.get_contribution_data()
+        else:
+            print("Skipping contribution data (no token provided)")
+
+        svg_content = fetch_languages.generate_svg(top_langs, total_lines, contribution_data)
 
         svg_path = Path("assets/languages.svg")
         os.makedirs(svg_path.parent, exist_ok=True)
@@ -185,6 +196,12 @@ def run_test_with_stats():
         if svg_path.exists():
             size = svg_path.stat().st_size
             print(f"SVG created: {svg_path} ({size:,} bytes)")
+
+            if contribution_data:
+                print(f"Total contributions: {contribution_data['total_contributions']:,}")
+                print(f"All types total: {contribution_data['all_types_total']:,}")
+                print(f"Current streak: {contribution_data['current_streak']} days")
+                print(f"Longest streak: {contribution_data['longest_streak']} days")
 
             import webbrowser
 

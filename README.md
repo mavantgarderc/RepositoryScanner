@@ -5,8 +5,9 @@ Account analyzer based on GitHub's language statistics (byte-based code size fro
 The card:
 
 - Shows your **top 6 languages** by total code size
+- Displays **contribution statistics**: total contributions, current streak, and longest streak
 - Uses a **Kanagawa paper‑ink**–inspired theme
-- Updates automatically every 24 hours via **GitHub Actions**
+- Updates automatically weekly via **GitHub Actions**
 
 > **How languages are measured**  
 > GitHub’s language API returns the number of **bytes** of code per language.  
@@ -45,8 +46,9 @@ Replace `<username>` with your GitHub username.
 
 - **Comprehensive analysis**: scans both public and private repositories
 - **Top 6 languages** by total code size
+- **GitHub contribution stats**: total contributions, current streak, and longest streak
 - **Kanagawa theme** for a clean, paper‑ink look
-- **Auto‑updates daily** via GitHub Actions
+- **Auto‑updates weekly** via GitHub Actions
 - **SVG output** that looks sharp anywhere (profile, docs, dashboards)
 - **Configurable** excluded languages and colors
 
@@ -202,10 +204,10 @@ The workflow file is:
 
 It is configured to:
 
-- Run **daily at 00:00 UTC**:
+- Run **weekly on Sunday at 00:00 UTC**:
   ```yaml
   schedule:
-    - cron: "0 0 * * *"
+    - cron: "0 0 * * 0"
   ```
 - Run on demand via **“Run workflow”**
 - Commit updated `assets/languages.svg` back to `main`
