@@ -172,7 +172,7 @@ def aggregate_languages():
 
 def generate_svg(top_langs, total_size, contribution_data=None):
     svg_width = 600
-    svg_height = 380 if contribution_data else 280
+    svg_height = 355 if contribution_data else 280
 
     bar_width = 480
     bar_height = 24
@@ -333,17 +333,15 @@ def generate_svg(top_langs, total_size, contribution_data=None):
         svg_parts.append("</g>")
 
     if contribution_data:
-        
+
         stats_start_y = legend_start_y + (items_per_col * row_height) + 20
         box_width = 150
-        box_height = 60
-        spacing = (svg_width - 3 * box_width) // 4  
+        box_height = 65
+        spacing = (svg_width - 3 * box_width) // 4
 
-        
         x_pos = spacing
         y_pos = stats_start_y
 
-        
         svg_parts.append(
             f'<rect x="{x_pos}" y="{y_pos}" width="{box_width}" height="{box_height}" class="stat-box"/>'
         )
@@ -356,10 +354,8 @@ def generate_svg(top_langs, total_size, contribution_data=None):
             f'fill="{COLORS["fg_secondary"]}" class="stat-label">TOTAL CONTRIBUTIONS</text>'
         )
 
-        
         x_pos += box_width + spacing
 
-        
         svg_parts.append(
             f'<rect x="{x_pos}" y="{y_pos}" width="{box_width}" height="{box_height}" class="stat-box"/>'
         )
@@ -372,10 +368,8 @@ def generate_svg(top_langs, total_size, contribution_data=None):
             f'fill="{COLORS["fg_secondary"]}" class="stat-label">CURRENT STREAK</text>'
         )
 
-        
         x_pos += box_width + spacing
 
-        
         svg_parts.append(
             f'<rect x="{x_pos}" y="{y_pos}" width="{box_width}" height="{box_height}" class="stat-box"/>'
         )
@@ -388,7 +382,6 @@ def generate_svg(top_langs, total_size, contribution_data=None):
             f'fill="{COLORS["fg_secondary"]}" class="stat-label">LONGEST STREAK</text>'
         )
 
-        
         footer_y = y_pos + box_height + 15
     else:
         footer_y = legend_start_y + (items_per_col * row_height) + 15
@@ -422,7 +415,6 @@ def get_contribution_data():
     """Fetch contribution data using GitHub GraphQL API."""
     print(f"Fetching contribution data for user: {USERNAME}")
 
-    
     query = """
     query($login: String!, $from: DateTime!, $to: DateTime!) {
       user(login: $login) {
@@ -445,8 +437,6 @@ def get_contribution_data():
     }
     """
 
-    
-    
     to_date = datetime.now()
     from_date = to_date - timedelta(days=365)
 
@@ -485,13 +475,10 @@ def get_contribution_data():
 
         contrib_collection = user_data["contributionsCollection"]
 
-        
         calendar = contrib_collection["contributionCalendar"]
-        
-        
+
         total_contributions = calendar["totalContributions"]
 
-        
         all_types_total = (
             contrib_collection["totalCommitContributions"]
             + contrib_collection["totalIssueContributions"]
@@ -499,12 +486,11 @@ def get_contribution_data():
             + contrib_collection["totalPullRequestReviewContributions"]
         )
 
-        
         current_streak, longest_streak = calculate_streaks(calendar["weeks"])
 
         contribution_data = {
-            "total_contributions": total_contributions,  
-            "all_types_total": all_types_total,  
+            "total_contributions": total_contributions,
+            "all_types_total": all_types_total,
             "current_streak": current_streak,
             "longest_streak": longest_streak,
             "commit_contributions": contrib_collection["totalCommitContributions"],
@@ -533,7 +519,7 @@ def get_contribution_data():
 
 def calculate_streaks(weeks):
     """Calculate current and longest streaks from contribution weeks data."""
-    
+
     all_days = []
     for week in weeks:
         for day in week["contributionDays"]:
@@ -544,20 +530,16 @@ def calculate_streaks(weeks):
                 }
             )
 
-    
     all_days.sort(key=lambda x: x["date"])
 
     if not all_days:
         return 0, 0
 
-    
     date_map = {day["date"].date(): day["count"] for day in all_days}
 
-    
     start_date = min(date_map.keys()) if date_map else datetime.now().date()
     end_date = max(date_map.keys()) if date_map else datetime.now().date()
 
-    
     current_date = start_date
     current_streak = 0
     longest_streak = 0
@@ -569,31 +551,27 @@ def calculate_streaks(weeks):
         if has_contributions:
             temp_streak += 1
         else:
-            
+
             if temp_streak > 0:
                 longest_streak = max(longest_streak, temp_streak)
                 temp_streak = 0
 
         current_date += timedelta(days=1)
 
-    
     if temp_streak > 0:
         longest_streak = max(longest_streak, temp_streak)
 
-    
     today = datetime.now().date()
     current_streak = 0
     check_date = today
 
-    
     if today > end_date:
-        
+
         if date_map.get(end_date, 0) > 0:
-            
+
             days_since_last = (today - end_date).days
             if days_since_last == 1:
-                
-                
+
                 temp_streak = 0
                 check_date = end_date
                 while check_date >= start_date:
@@ -604,12 +582,12 @@ def calculate_streaks(weeks):
                     check_date -= timedelta(days=1)
                 current_streak = temp_streak
             elif days_since_last > 1:
-                
+
                 current_streak = 0
         else:
             current_streak = 0
     else:
-        
+
         while check_date >= start_date:
             if date_map.get(check_date, 0) > 0:
                 current_streak += 1
@@ -637,7 +615,7 @@ def main():
             return 1
 
     try:
-        
+
         langs = aggregate_languages()
         total_size = sum(langs.values())
 
@@ -652,7 +630,6 @@ def main():
             percent = (size / total_size) * 100
             print(f"  {lang}: {size:,} bytes ({percent:.2f}%)")
 
-        
         contribution_data = get_contribution_data()
 
         svg_content = generate_svg(top_langs, total_size, contribution_data)
