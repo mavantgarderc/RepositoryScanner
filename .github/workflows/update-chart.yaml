@@ -2,8 +2,7 @@ name: Update Language Stats
 
 on:
   schedule:
-    # Run weekly on Sunday
-    - cron: "0 0 * * 0"
+    - cron: "0 0 * * *"
   workflow_dispatch:
   push:
     branches: [main]
@@ -99,7 +98,7 @@ jobs:
           echo "- **Trigger**: ${{ github.event_name }}" >> "$GITHUB_STEP_SUMMARY"
           echo "- **Changes detected**: ${{ steps.verify-changed-files.outputs.changed }}" >> "$GITHUB_STEP_SUMMARY"
           if [ -f "assets/languages.svg" ]; then
-            echo "- **SVG file**: Generated successfully ✅" >> "$GITHUB_STEP_SUMMARY"
+            echo "- **SVG file**: Generated successfully" >> "$GITHUB_STEP_SUMMARY"
           else
-            echo "- **SVG file**: Not found ❌" >> "$GITHUB_STEP_SUMMARY"
+            echo "- **SVG file**: Not found" >> "$GITHUB_STEP_SUMMARY"
           fi
