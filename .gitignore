@@ -1,3 +1,7 @@
 kanagawa-actions-key
 kanagawa-actions-key.pub
 .env
+__pycache__/
+*.py[cod]
+*$py.class
+*$pyc.class
