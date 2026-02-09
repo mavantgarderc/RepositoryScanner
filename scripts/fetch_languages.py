@@ -1,13 +1,18 @@
+import json
 import os
 import sys
+import time
 from collections import defaultdict
 from datetime import datetime, timedelta
+from pathlib import Path
 
 import requests
 from colors import COLORS
 from dotenv import load_dotenv
 
 load_dotenv()
+
+CACHE_FILE = Path(".contribution_cache.json")
 
 
 def _get_top_n(default: int = 6) -> int:
@@ -411,9 +416,74 @@ def generate_svg(top_langs, total_size, contribution_data=None):
     return "\n".join(svg_parts)
 
 
-def get_contribution_data():
-    """Fetch contribution data using GitHub GraphQL API."""
-    print(f"Fetching contribution data for user: {USERNAME}")
+def load_contribution_cache():
+    """Load cached contribution data from file."""
+    if CACHE_FILE.exists():
+        try:
+            with open(CACHE_FILE, "r") as f:
+                return json.load(f)
+        except (json.JSONDecodeError, IOError) as e:
+            print(f"Warning: Could not load cache: {e}")
+    return {}
+
+
+def save_contribution_cache(cache_data):
+    """Save contribution data to cache file."""
+    try:
+        with open(CACHE_FILE, "w") as f:
+            json.dump(cache_data, f, indent=2)
+    except IOError as e:
+        print(f"Warning: Could not save cache: {e}")
+
+
+def get_user_creation_date():
+    """Fetch the user's account creation date."""
+    query = """
+    query($login: String!) {
+      user(login: $login) {
+        createdAt
+      }
+    }
+    """
+
+    headers = {
+        "Authorization": f"Bearer {TOKEN}",
+        "User-Agent": "RepositoryScanner/1.0 (+https://github.com/mavantgarderc/RepositoryScanner)",
+    }
+
+    try:
+        response = requests.post(
+            "https://api.github.com/graphql",
+            json={"query": query, "variables": {"login": USERNAME}},
+            headers=headers,
+            timeout=30,
+        )
+        response.raise_for_status()
+        data = response.json()
+
+        if "errors" in data:
+            print(f"GraphQL errors: {data['errors']}")
+            return None
+
+        user_data = data["data"]["user"]
+        if not user_data:
+            print(f"User '{USERNAME}' not found")
+            return None
+
+        created_at = datetime.fromisoformat(
+            user_data["createdAt"].replace("Z", "+00:00")
+        )
+        return created_at
+
+    except Exception as e:
+        print(f"Error fetching user creation date: {e}")
+        return None
+
+
+def fetch_year_contributions(year):
+    """Fetch contribution data for a specific year."""
+    from_date = datetime(year, 1, 1, 0, 0, 0)
+    to_date = datetime(year, 12, 31, 23, 59, 59)
 
     query = """
     query($login: String!, $from: DateTime!, $to: DateTime!) {
@@ -437,16 +507,11 @@ def get_contribution_data():
     }
     """
 
-    to_date = datetime.now()
-    from_date = to_date - timedelta(days=365)
-
     variables = {
         "login": USERNAME,
         "from": from_date.isoformat(),
         "to": to_date.isoformat(),
     }
-
-    graphql_url = "https://api.github.com/graphql"
 
     headers = {
         "Authorization": f"Bearer {TOKEN}",
@@ -455,13 +520,226 @@ def get_contribution_data():
 
     try:
         response = requests.post(
-            graphql_url,
+            "https://api.github.com/graphql",
             json={"query": query, "variables": variables},
             headers=headers,
             timeout=30,
         )
         response.raise_for_status()
+        data = response.json()
 
+        if "errors" in data:
+            print(f"GraphQL errors for {year}: {data['errors']}")
+            return None
+
+        user_data = data["data"]["user"]
+        if not user_data:
+            print(f"User '{USERNAME}' not found")
+            return None
+
+        return user_data["contributionsCollection"]
+
+    except Exception as e:
+        print(f"Error fetching contributions for {year}: {e}")
+        return None
+
+
+def merge_years_data(years_data):
+    """Merge contribution data from multiple years."""
+    all_weeks = []
+    total_calendar_contributions = 0
+    total_commit = 0
+    total_issue = 0
+    total_pr = 0
+    total_review = 0
+
+    for year, data in sorted(years_data.items()):
+        if not data:
+            continue
+
+        calendar = data["contributionCalendar"]
+        all_weeks.extend(calendar["weeks"])
+        total_calendar_contributions += calendar["totalContributions"]
+        total_commit += data["totalCommitContributions"]
+        total_issue += data["totalIssueContributions"]
+        total_pr += data["totalPullRequestContributions"]
+        total_review += data["totalPullRequestReviewContributions"]
+
+    return {
+        "weeks": all_weeks,
+        "total_contributions": total_calendar_contributions,
+        "totalCommitContributions": total_commit,
+        "totalIssueContributions": total_issue,
+        "totalPullRequestContributions": total_pr,
+        "totalPullRequestReviewContributions": total_review,
+    }
+
+
+def get_contribution_data():
+    """Fetch all-time contribution data using GitHub GraphQL API with caching."""
+    print(f"Fetching contribution data for user: {USERNAME}")
+
+    created_at = get_user_creation_date()
+    if not created_at:
+        print("Could not determine user creation date, falling back to last 365 days")
+        return get_contribution_data_fallback()
+
+    start_year = created_at.year
+    current_year = datetime.now().year
+
+    print(f"Account created: {created_at.strftime('%Y-%m-%d')}")
+    print(f"Fetching contributions from {start_year} to {current_year}...")
+
+    cache = load_contribution_cache()
+    years_data = cache.get("years", {})
+    all_types_data = cache.get("all_types", {})
+
+    years_to_fetch = []
+    for year in range(start_year, current_year + 1):
+        year_str = str(year)
+        if year_str not in years_data or year == current_year:
+            years_to_fetch.append(year)
+
+    print(f"Years to fetch: {years_to_fetch}")
+
+    rate_limit_remaining = None
+    for i, year in enumerate(years_to_fetch):
+        year_str = str(year)
+        print(f"Fetching {year}... ({i+1}/{len(years_to_fetch)})")
+
+        data = fetch_year_contributions(year)
+        if data:
+            years_data[year_str] = {
+                "weeks": data["contributionCalendar"]["weeks"],
+                "totalContributions": data["contributionCalendar"][
+                    "totalContributions"
+                ],
+            }
+            all_types_data[year_str] = {
+                "totalCommitContributions": data["totalCommitContributions"],
+                "totalIssueContributions": data["totalIssueContributions"],
+                "totalPullRequestContributions": data["totalPullRequestContributions"],
+                "totalPullRequestReviewContributions": data[
+                    "totalPullRequestReviewContributions"
+                ],
+            }
+
+            save_contribution_cache(
+                {
+                    "years": years_data,
+                    "all_types": all_types_data,
+                    "last_updated": datetime.now().isoformat(),
+                }
+            )
+        else:
+            print(f"Warning: Failed to fetch data for {year}")
+
+        if i < len(years_to_fetch) - 1:
+            time.sleep(1)
+
+    merged = merge_years_data(
+        {
+            year: {
+                "contributionCalendar": {
+                    "weeks": data["weeks"],
+                    "totalContributions": data["totalContributions"],
+                },
+                "totalCommitContributions": all_types_data.get(year, {}).get(
+                    "totalCommitContributions", 0
+                ),
+                "totalIssueContributions": all_types_data.get(year, {}).get(
+                    "totalIssueContributions", 0
+                ),
+                "totalPullRequestContributions": all_types_data.get(year, {}).get(
+                    "totalPullRequestContributions", 0
+                ),
+                "totalPullRequestReviewContributions": all_types_data.get(year, {}).get(
+                    "totalPullRequestReviewContributions", 0
+                ),
+            }
+            for year, data in years_data.items()
+        }
+    )
+
+    current_streak, longest_streak = calculate_streaks_all_time(merged["weeks"])
+
+    all_types_total = (
+        merged["totalCommitContributions"]
+        + merged["totalIssueContributions"]
+        + merged["totalPullRequestContributions"]
+        + merged["totalPullRequestReviewContributions"]
+    )
+
+    contribution_data = {
+        "total_contributions": merged["total_contributions"],
+        "all_types_total": all_types_total,
+        "current_streak": current_streak,
+        "longest_streak": longest_streak,
+        "commit_contributions": merged["totalCommitContributions"],
+        "issue_contributions": merged["totalIssueContributions"],
+        "pr_contributions": merged["totalPullRequestContributions"],
+        "review_contributions": merged["totalPullRequestReviewContributions"],
+        "years_fetched": len(years_data),
+    }
+
+    print(f"\nSuccessfully fetched contribution data:")
+    print(f"  Total contributions (all time): {merged['total_contributions']:,}")
+    print(f"  Total contributions (all types): {all_types_total:,}")
+    print(f"  Years analyzed: {len(years_data)}")
+    print(f"  Current streak: {current_streak} days")
+    print(f"  Longest streak: {longest_streak} days")
+
+    return contribution_data
+
+
+def get_contribution_data_fallback():
+    """Fallback to last 365 days if multi-year fetch fails."""
+    print("Falling back to last 365 days...")
+
+    to_date = datetime.now()
+    from_date = to_date - timedelta(days=365)
+
+    query = """
+    query($login: String!, $from: DateTime!, $to: DateTime!) {
+      user(login: $login) {
+        contributionsCollection(from: $from, to: $to) {
+          totalCommitContributions
+          totalIssueContributions
+          totalPullRequestContributions
+          totalPullRequestReviewContributions
+          contributionCalendar {
+            totalContributions
+            weeks {
+              contributionDays {
+                date
+                contributionCount
+              }
+            }
+          }
+        }
+      }
+    }
+    """
+
+    variables = {
+        "login": USERNAME,
+        "from": from_date.isoformat(),
+        "to": to_date.isoformat(),
+    }
+
+    headers = {
+        "Authorization": f"Bearer {TOKEN}",
+        "User-Agent": "RepositoryScanner/1.0 (+https://github.com/mavantgarderc/RepositoryScanner)",
+    }
+
+    try:
+        response = requests.post(
+            "https://api.github.com/graphql",
+            json={"query": query, "variables": variables},
+            headers=headers,
+            timeout=30,
+        )
+        response.raise_for_status()
         data = response.json()
 
         if "errors" in data:
@@ -474,10 +752,9 @@ def get_contribution_data():
             return None
 
         contrib_collection = user_data["contributionsCollection"]
-
         calendar = contrib_collection["contributionCalendar"]
 
-        total_contributions = calendar["totalContributions"]
+        current_streak, longest_streak = calculate_streaks_all_time(calendar["weeks"])
 
         all_types_total = (
             contrib_collection["totalCommitContributions"]
@@ -486,10 +763,8 @@ def get_contribution_data():
             + contrib_collection["totalPullRequestReviewContributions"]
         )
 
-        current_streak, longest_streak = calculate_streaks(calendar["weeks"])
-
-        contribution_data = {
-            "total_contributions": total_contributions,
+        return {
+            "total_contributions": calendar["totalContributions"],
             "all_types_total": all_types_total,
             "current_streak": current_streak,
             "longest_streak": longest_streak,
@@ -499,26 +774,16 @@ def get_contribution_data():
             "review_contributions": contrib_collection[
                 "totalPullRequestReviewContributions"
             ],
+            "years_fetched": 1,
         }
 
-        print(f"Successfully fetched contribution data:")
-        print(f"  Total contributions (calendar): {total_contributions}")
-        print(f"  Total contributions (all types): {all_types_total}")
-        print(f"  Current streak: {current_streak} days")
-        print(f"  Longest streak: {longest_streak} days")
-
-        return contribution_data
-
-    except requests.exceptions.RequestException as e:
-        print(f"Error fetching contribution data: {e}")
-        return None
-    except KeyError as e:
-        print(f"Error parsing contribution data: missing key {e}")
+    except Exception as e:
+        print(f"Error in fallback: {e}")
         return None
 
 
-def calculate_streaks(weeks):
-    """Calculate current and longest streaks from contribution weeks data."""
+def calculate_streaks_all_time(weeks):
+    """Calculate current and longest streaks from all-time contribution data."""
 
     all_days = []
     for week in weeks:
@@ -537,13 +802,12 @@ def calculate_streaks(weeks):
 
     date_map = {day["date"].date(): day["count"] for day in all_days}
 
-    start_date = min(date_map.keys()) if date_map else datetime.now().date()
-    end_date = max(date_map.keys()) if date_map else datetime.now().date()
+    start_date = min(date_map.keys())
+    end_date = max(date_map.keys())
 
-    current_date = start_date
-    current_streak = 0
     longest_streak = 0
     temp_streak = 0
+    current_date = start_date
 
     while current_date <= end_date:
         has_contributions = date_map.get(current_date, 0) > 0
@@ -551,7 +815,6 @@ def calculate_streaks(weeks):
         if has_contributions:
             temp_streak += 1
         else:
-
             if temp_streak > 0:
                 longest_streak = max(longest_streak, temp_streak)
                 temp_streak = 0
@@ -562,40 +825,24 @@ def calculate_streaks(weeks):
         longest_streak = max(longest_streak, temp_streak)
 
     today = datetime.now().date()
+    one_year_ago = today - timedelta(days=365)
+
     current_streak = 0
     check_date = today
 
-    if today > end_date:
-
-        if date_map.get(end_date, 0) > 0:
-
-            days_since_last = (today - end_date).days
-            if days_since_last == 1:
-
-                temp_streak = 0
-                check_date = end_date
-                while check_date >= start_date:
-                    if date_map.get(check_date, 0) > 0:
-                        temp_streak += 1
-                    else:
-                        break
-                    check_date -= timedelta(days=1)
-                current_streak = temp_streak
-            elif days_since_last > 1:
-
-                current_streak = 0
+    while check_date >= one_year_ago and check_date >= start_date:
+        if date_map.get(check_date, 0) > 0:
+            current_streak += 1
         else:
-            current_streak = 0
-    else:
-
-        while check_date >= start_date:
-            if date_map.get(check_date, 0) > 0:
-                current_streak += 1
-            else:
-                break
-            check_date -= timedelta(days=1)
+            break
+        check_date -= timedelta(days=1)
 
     return current_streak, longest_streak
+
+
+def calculate_streaks(weeks):
+    """Legacy function - kept for backwards compatibility."""
+    return calculate_streaks_all_time(weeks)
 
 
 def main():
@@ -643,6 +890,7 @@ def main():
         print(f"Total code size analyzed (bytes): {total_size:,}")
         if contribution_data:
             print(f"Total contributions: {contribution_data['total_contributions']:,}")
+            print(f"Years analyzed: {contribution_data.get('years_fetched', 1)}")
             print(f"Current streak: {contribution_data['current_streak']} days")
             print(f"Longest streak: {contribution_data['longest_streak']} days")
         return 0

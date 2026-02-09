@@ -117,7 +117,6 @@ def run_test_with_stats():
     print("Running language stats generation...")
     print("=" * 50)
 
-    # Get the token from environment variables
     token = os.getenv("GH_TOKEN", "")
 
     try:
@@ -175,7 +174,6 @@ def run_test_with_stats():
             :TOP_N
         ]
 
-        # Get contribution data if token is available
         contribution_data = None
         if token:
             print("Fetching contribution data...")
@@ -200,6 +198,7 @@ def run_test_with_stats():
             if contribution_data:
                 print(f"Total contributions: {contribution_data['total_contributions']:,}")
                 print(f"All types total: {contribution_data['all_types_total']:,}")
+                print(f"Years analyzed: {contribution_data.get('years_fetched', 1)}")
                 print(f"Current streak: {contribution_data['current_streak']} days")
                 print(f"Longest streak: {contribution_data['longest_streak']} days")
 
