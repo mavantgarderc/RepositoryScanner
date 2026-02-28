@@ -32,11 +32,11 @@
         </text>
         
 <g id="language-bar" clip-path="url(#barClip)" shape-rendering="crispEdges">
-<rect x="60" y="85" width="279" height="24" class="python"/>
-<rect x="339" y="85" width="96" height="24" class="lua"/>
-<rect x="435" y="85" width="89" height="24" class="csharp"/>
-<rect x="524" y="85" width="8" height="24" class="rust"/>
-<rect x="532" y="85" width="4" height="24" class="shell"/>
+<rect x="60" y="85" width="278" height="24" class="python"/>
+<rect x="338" y="85" width="97" height="24" class="lua"/>
+<rect x="435" y="85" width="88" height="24" class="csharp"/>
+<rect x="523" y="85" width="8" height="24" class="rust"/>
+<rect x="531" y="85" width="5" height="24" class="shell"/>
 <rect x="536" y="85" width="4" height="24" class="vimscript"/>
 </g>
 <rect x="60" y="85" width="480" height="24" fill="#1f1f28" rx="4">
@@ -45,22 +45,22 @@
 <g transform="translate(60.0, 134)">
 <circle cx="8" cy="-3" r="5" class="python"/>
 <text x="24" y="0" class="fg-primary font-lang">Python</text>
-<text x="236.0" y="0" class="fg-secondary font-percent" text-anchor="end">58.06%</text>
+<text x="236.0" y="0" class="fg-secondary font-percent" text-anchor="end">57.81%</text>
 </g>
 <g transform="translate(60.0, 156)">
 <circle cx="8" cy="-3" r="5" class="lua"/>
 <text x="24" y="0" class="fg-primary font-lang">Lua</text>
-<text x="236.0" y="0" class="fg-secondary font-percent" text-anchor="end">19.92%</text>
+<text x="236.0" y="0" class="fg-secondary font-percent" text-anchor="end">20.24%</text>
 </g>
 <g transform="translate(60.0, 178)">
 <circle cx="8" cy="-3" r="5" class="csharp"/>
 <text x="24" y="0" class="fg-primary font-lang">C#</text>
-<text x="236.0" y="0" class="fg-secondary font-percent" text-anchor="end">18.38%</text>
+<text x="236.0" y="0" class="fg-secondary font-percent" text-anchor="end">18.30%</text>
 </g>
 <g transform="translate(300.0, 134)">
 <circle cx="8" cy="-3" r="5" class="rust"/>
 <text x="24" y="0" class="fg-primary font-lang">Rust</text>
-<text x="236.0" y="0" class="fg-secondary font-percent" text-anchor="end">1.69%</text>
+<text x="236.0" y="0" class="fg-secondary font-percent" text-anchor="end">1.68%</text>
 </g>
 <g transform="translate(300.0, 156)">
 <circle cx="8" cy="-3" r="5" class="shell"/>
@@ -70,13 +70,13 @@
 <g transform="translate(300.0, 178)">
 <circle cx="8" cy="-3" r="5" class="vimscript"/>
 <text x="24" y="0" class="fg-primary font-lang">Vim Script</text>
-<text x="236.0" y="0" class="fg-secondary font-percent" text-anchor="end">0.71%</text>
+<text x="236.0" y="0" class="fg-secondary font-percent" text-anchor="end">0.74%</text>
 </g>
 <rect x="37" y="220" width="150" height="65" class="stat-box"/>
-<text x="112.0" y="245" text-anchor="middle" dominant-baseline="middle" fill="#dcd7ba" class="stat-value">4,135</text>
+<text x="112.0" y="245" text-anchor="middle" dominant-baseline="middle" fill="#dcd7ba" class="stat-value">4,156</text>
 <text x="112.0" y="265" text-anchor="middle" dominant-baseline="middle" fill="#727169" class="stat-label">TOTAL CONTRIBUTIONS</text>
 <rect x="224" y="220" width="150" height="65" class="stat-box"/>
-<text x="299.0" y="245" text-anchor="middle" dominant-baseline="middle" fill="#7e9cd8" class="stat-value">0 DAYS</text>
+<text x="299.0" y="245" text-anchor="middle" dominant-baseline="middle" fill="#7e9cd8" class="stat-value">22 DAYS</text>
 <text x="299.0" y="265" text-anchor="middle" dominant-baseline="middle" fill="#727169" class="stat-label">CURRENT STREAK</text>
 <rect x="411" y="220" width="150" height="65" class="stat-box"/>
 <text x="486.0" y="245" text-anchor="middle" dominant-baseline="middle" fill="#dcd7ba" class="stat-value">162 DAYS</text>
