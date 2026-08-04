@@ -45,12 +45,12 @@
 <g transform="translate(60.0, 134)">
 <circle cx="8" cy="-3" r="5" class="python"/>
 <text x="24" y="0" class="fg-primary font-lang">Python</text>
-<text x="236.0" y="0" class="fg-secondary font-percent" text-anchor="end">41.93%</text>
+<text x="236.0" y="0" class="fg-secondary font-percent" text-anchor="end">41.91%</text>
 </g>
 <g transform="translate(60.0, 156)">
 <circle cx="8" cy="-3" r="5" class="lua"/>
 <text x="24" y="0" class="fg-primary font-lang">Lua</text>
-<text x="236.0" y="0" class="fg-secondary font-percent" text-anchor="end">19.96%</text>
+<text x="236.0" y="0" class="fg-secondary font-percent" text-anchor="end">19.95%</text>
 </g>
 <g transform="translate(60.0, 178)">
 <circle cx="8" cy="-3" r="5" class="csharp"/>
@@ -65,7 +65,7 @@
 <g transform="translate(300.0, 156)">
 <circle cx="8" cy="-3" r="5" class="rust"/>
 <text x="24" y="0" class="fg-primary font-lang">Rust</text>
-<text x="236.0" y="0" class="fg-secondary font-percent" text-anchor="end">1.63%</text>
+<text x="236.0" y="0" class="fg-secondary font-percent" text-anchor="end">1.67%</text>
 </g>
 <g transform="translate(300.0, 178)">
 <circle cx="8" cy="-3" r="5" class="shell"/>
@@ -73,13 +73,13 @@
 <text x="236.0" y="0" class="fg-secondary font-percent" text-anchor="end">0.97%</text>
 </g>
 <rect x="37" y="220" width="150" height="65" class="stat-box"/>
-<text x="112.0" y="245" text-anchor="middle" dominant-baseline="middle" fill="#dcd7ba" class="stat-value">8,240</text>
+<text x="112.0" y="245" text-anchor="middle" dominant-baseline="middle" fill="#dcd7ba" class="stat-value">8,281</text>
 <text x="112.0" y="265" text-anchor="middle" dominant-baseline="middle" fill="#727169" class="stat-label">TOTAL CONTRIBUTIONS</text>
 <rect x="224" y="220" width="150" height="65" class="stat-box"/>
-<text x="299.0" y="245" text-anchor="middle" dominant-baseline="middle" fill="#7e9cd8" class="stat-value">0 DAYS</text>
+<text x="299.0" y="245" text-anchor="middle" dominant-baseline="middle" fill="#7e9cd8" class="stat-value">366 DAYS</text>
 <text x="299.0" y="265" text-anchor="middle" dominant-baseline="middle" fill="#727169" class="stat-label">CURRENT STREAK</text>
 <rect x="411" y="220" width="150" height="65" class="stat-box"/>
-<text x="486.0" y="245" text-anchor="middle" dominant-baseline="middle" fill="#dcd7ba" class="stat-value">420 DAYS</text>
+<text x="486.0" y="245" text-anchor="middle" dominant-baseline="middle" fill="#dcd7ba" class="stat-value">422 DAYS</text>
 <text x="486.0" y="265" text-anchor="middle" dominant-baseline="middle" fill="#727169" class="stat-label">LONGEST STREAK</text>
 <line x1="60" y1="300" x2="540" y2="300" stroke="#2a2a37" stroke-width="1"/>
 <text x="300.0" y="318" text-anchor="middle" class="fg-secondary font-footer">Based on repository analysis • github.com/mavomen</text>
