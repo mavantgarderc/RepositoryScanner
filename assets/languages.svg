@@ -45,7 +45,7 @@
 <g transform="translate(60.0, 134)">
 <circle cx="8" cy="-3" r="5" class="python"/>
 <text x="24" y="0" class="fg-primary font-lang">Python</text>
-<text x="236.0" y="0" class="fg-secondary font-percent" text-anchor="end">40.14%</text>
+<text x="236.0" y="0" class="fg-secondary font-percent" text-anchor="end">40.13%</text>
 </g>
 <g transform="translate(60.0, 156)">
 <circle cx="8" cy="-3" r="5" class="lua"/>
@@ -60,7 +60,7 @@
 <g transform="translate(300.0, 134)">
 <circle cx="8" cy="-3" r="5" class="typescript"/>
 <text x="24" y="0" class="fg-primary font-lang">TypeScript</text>
-<text x="236.0" y="0" class="fg-secondary font-percent" text-anchor="end">12.45%</text>
+<text x="236.0" y="0" class="fg-secondary font-percent" text-anchor="end">12.46%</text>
 </g>
 <g transform="translate(300.0, 156)">
 <circle cx="8" cy="-3" r="5" class="rust"/>
@@ -73,7 +73,7 @@
 <text x="236.0" y="0" class="fg-secondary font-percent" text-anchor="end">1.11%</text>
 </g>
 <rect x="37" y="220" width="150" height="65" class="stat-box"/>
-<text x="112.0" y="245" text-anchor="middle" dominant-baseline="middle" fill="#dcd7ba" class="stat-value">10,070</text>
+<text x="112.0" y="245" text-anchor="middle" dominant-baseline="middle" fill="#dcd7ba" class="stat-value">10,072</text>
 <text x="112.0" y="265" text-anchor="middle" dominant-baseline="middle" fill="#727169" class="stat-label">TOTAL CONTRIBUTIONS</text>
 <rect x="224" y="220" width="150" height="65" class="stat-box"/>
 <text x="299.0" y="245" text-anchor="middle" dominant-baseline="middle" fill="#7e9cd8" class="stat-value">366 DAYS</text>
