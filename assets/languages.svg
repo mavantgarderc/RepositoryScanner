@@ -32,12 +32,12 @@
         </text>
         
 <g id="language-bar" clip-path="url(#barClip)" shape-rendering="crispEdges">
-<rect x="60" y="85" width="197" height="24" class="python"/>
-<rect x="257" y="85" width="94" height="24" class="csharp"/>
-<rect x="351" y="85" width="89" height="24" class="lua"/>
-<rect x="440" y="85" width="48" height="24" class="rust"/>
-<rect x="488" y="85" width="42" height="24" class="typescript"/>
-<rect x="530" y="85" width="7" height="24" class="shell"/>
+<rect x="60" y="85" width="196" height="24" class="python"/>
+<rect x="256" y="85" width="94" height="24" class="csharp"/>
+<rect x="350" y="85" width="88" height="24" class="lua"/>
+<rect x="438" y="85" width="49" height="24" class="rust"/>
+<rect x="487" y="85" width="44" height="24" class="typescript"/>
+<rect x="531" y="85" width="7" height="24" class="shell"/>
 </g>
 <rect x="60" y="85" width="480" height="24" fill="#1f1f28" rx="4">
   <animate attributeName="width" from="480" to="0" dur="1.2s" fill="freeze"/>
@@ -45,41 +45,41 @@
 <g transform="translate(60.0, 134)">
 <circle cx="8" cy="-3" r="5" class="python"/>
 <text x="24" y="0" class="fg-primary font-lang">Python</text>
-<text x="236.0" y="0" class="fg-secondary font-percent" text-anchor="end">40.81%</text>
+<text x="236.0" y="0" class="fg-secondary font-percent" text-anchor="end">40.55%</text>
 </g>
 <g transform="translate(60.0, 156)">
 <circle cx="8" cy="-3" r="5" class="csharp"/>
 <text x="24" y="0" class="fg-primary font-lang">C#</text>
-<text x="236.0" y="0" class="fg-secondary font-percent" text-anchor="end">19.42%</text>
+<text x="236.0" y="0" class="fg-secondary font-percent" text-anchor="end">19.30%</text>
 </g>
 <g transform="translate(60.0, 178)">
 <circle cx="8" cy="-3" r="5" class="lua"/>
 <text x="24" y="0" class="fg-primary font-lang">Lua</text>
-<text x="236.0" y="0" class="fg-secondary font-percent" text-anchor="end">18.34%</text>
+<text x="236.0" y="0" class="fg-secondary font-percent" text-anchor="end">18.23%</text>
 </g>
 <g transform="translate(300.0, 134)">
 <circle cx="8" cy="-3" r="5" class="rust"/>
 <text x="24" y="0" class="fg-primary font-lang">Rust</text>
-<text x="236.0" y="0" class="fg-secondary font-percent" text-anchor="end">9.78%</text>
+<text x="236.0" y="0" class="fg-secondary font-percent" text-anchor="end">9.90%</text>
 </g>
 <g transform="translate(300.0, 156)">
 <circle cx="8" cy="-3" r="5" class="typescript"/>
 <text x="24" y="0" class="fg-primary font-lang">TypeScript</text>
-<text x="236.0" y="0" class="fg-secondary font-percent" text-anchor="end">8.54%</text>
+<text x="236.0" y="0" class="fg-secondary font-percent" text-anchor="end">8.88%</text>
 </g>
 <g transform="translate(300.0, 178)">
 <circle cx="8" cy="-3" r="5" class="shell"/>
 <text x="24" y="0" class="fg-primary font-lang">Shell</text>
-<text x="236.0" y="0" class="fg-secondary font-percent" text-anchor="end">1.24%</text>
+<text x="236.0" y="0" class="fg-secondary font-percent" text-anchor="end">1.26%</text>
 </g>
 <rect x="37" y="220" width="150" height="65" class="stat-box"/>
-<text x="112.0" y="245" text-anchor="middle" dominant-baseline="middle" fill="#dcd7ba" class="stat-value">10,334</text>
+<text x="112.0" y="245" text-anchor="middle" dominant-baseline="middle" fill="#dcd7ba" class="stat-value">10,389</text>
 <text x="112.0" y="265" text-anchor="middle" dominant-baseline="middle" fill="#727169" class="stat-label">TOTAL CONTRIBUTIONS</text>
 <rect x="224" y="220" width="150" height="65" class="stat-box"/>
 <text x="299.0" y="245" text-anchor="middle" dominant-baseline="middle" fill="#7e9cd8" class="stat-value">366 DAYS</text>
 <text x="299.0" y="265" text-anchor="middle" dominant-baseline="middle" fill="#727169" class="stat-label">CURRENT STREAK</text>
 <rect x="411" y="220" width="150" height="65" class="stat-box"/>
-<text x="486.0" y="245" text-anchor="middle" dominant-baseline="middle" fill="#dcd7ba" class="stat-value">449 DAYS</text>
+<text x="486.0" y="245" text-anchor="middle" dominant-baseline="middle" fill="#dcd7ba" class="stat-value">450 DAYS</text>
 <text x="486.0" y="265" text-anchor="middle" dominant-baseline="middle" fill="#727169" class="stat-label">LONGEST STREAK</text>
 <line x1="60" y1="300" x2="540" y2="300" stroke="#2a2a37" stroke-width="1"/>
 <text x="300.0" y="318" text-anchor="middle" class="fg-secondary font-footer">Based on repository analysis • github.com/mavomen</text>
