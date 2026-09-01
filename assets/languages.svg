@@ -35,9 +35,9 @@
 <rect x="60" y="85" width="196" height="24" class="python"/>
 <rect x="256" y="85" width="94" height="24" class="csharp"/>
 <rect x="350" y="85" width="88" height="24" class="lua"/>
-<rect x="438" y="85" width="49" height="24" class="rust"/>
-<rect x="487" y="85" width="44" height="24" class="typescript"/>
-<rect x="531" y="85" width="7" height="24" class="shell"/>
+<rect x="438" y="85" width="48" height="24" class="rust"/>
+<rect x="486" y="85" width="44" height="24" class="typescript"/>
+<rect x="530" y="85" width="7" height="24" class="shell"/>
 </g>
 <rect x="60" y="85" width="480" height="24" fill="#1f1f28" rx="4">
   <animate attributeName="width" from="480" to="0" dur="1.2s" fill="freeze"/>
@@ -45,7 +45,7 @@
 <g transform="translate(60.0, 134)">
 <circle cx="8" cy="-3" r="5" class="python"/>
 <text x="24" y="0" class="fg-primary font-lang">Python</text>
-<text x="236.0" y="0" class="fg-secondary font-percent" text-anchor="end">40.55%</text>
+<text x="236.0" y="0" class="fg-secondary font-percent" text-anchor="end">40.54%</text>
 </g>
 <g transform="translate(60.0, 156)">
 <circle cx="8" cy="-3" r="5" class="csharp"/>
@@ -55,7 +55,7 @@
 <g transform="translate(60.0, 178)">
 <circle cx="8" cy="-3" r="5" class="lua"/>
 <text x="24" y="0" class="fg-primary font-lang">Lua</text>
-<text x="236.0" y="0" class="fg-secondary font-percent" text-anchor="end">18.23%</text>
+<text x="236.0" y="0" class="fg-secondary font-percent" text-anchor="end">18.22%</text>
 </g>
 <g transform="translate(300.0, 134)">
 <circle cx="8" cy="-3" r="5" class="rust"/>
@@ -65,7 +65,7 @@
 <g transform="translate(300.0, 156)">
 <circle cx="8" cy="-3" r="5" class="typescript"/>
 <text x="24" y="0" class="fg-primary font-lang">TypeScript</text>
-<text x="236.0" y="0" class="fg-secondary font-percent" text-anchor="end">8.88%</text>
+<text x="236.0" y="0" class="fg-secondary font-percent" text-anchor="end">8.89%</text>
 </g>
 <g transform="translate(300.0, 178)">
 <circle cx="8" cy="-3" r="5" class="shell"/>
@@ -73,7 +73,7 @@
 <text x="236.0" y="0" class="fg-secondary font-percent" text-anchor="end">1.26%</text>
 </g>
 <rect x="37" y="220" width="150" height="65" class="stat-box"/>
-<text x="112.0" y="245" text-anchor="middle" dominant-baseline="middle" fill="#dcd7ba" class="stat-value">10,389</text>
+<text x="112.0" y="245" text-anchor="middle" dominant-baseline="middle" fill="#dcd7ba" class="stat-value">10,390</text>
 <text x="112.0" y="265" text-anchor="middle" dominant-baseline="middle" fill="#727169" class="stat-label">TOTAL CONTRIBUTIONS</text>
 <rect x="224" y="220" width="150" height="65" class="stat-box"/>
 <text x="299.0" y="245" text-anchor="middle" dominant-baseline="middle" fill="#7e9cd8" class="stat-value">366 DAYS</text>
